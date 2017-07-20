@@ -11,26 +11,11 @@ public class PlayerRepoImpl implements IPlayerRepo {
 		
 		StringBuilder result = new StringBuilder();
 		
-		//Search for empty name
-		if (p.getName().trim().isEmpty()) {
-			result.append("Error: Player does not have a name.");
-			
-			return result.toString();
-		}
+		result.append(errorChecking(p));
 		
-		//Search for zero players
-		if (p.getGames().length == 0) {
-			result.append("Error: Player cannot have no games.");
-			
+		if (result.length() != 0)
 			return result.toString();
-		}
 		
-		//Search for duplicates
-		if (findOne(p.getName()) != null) {			
-			result.append("Error: Player already exists in the repository.");
-			
-			return result.toString();
-		}
 			
 		for (int i = 0; i < players.length ; i++) {
 			if (players[i] == null) {
@@ -75,6 +60,25 @@ public class PlayerRepoImpl implements IPlayerRepo {
 	
 	public Player[] findAll() {
 		return players;
+	}
+	
+	private String errorChecking(Player p) {
+		//Search for empty name
+		if (p.getName().trim().isEmpty()) {
+			return "Error: Player does not have a name.";
+		}
+
+		//Search for zero players
+		if (p.getGames().length == 0) {
+			return "Error: Player cannot have no games.";
+		}
+
+		//Search for duplicates
+		if (findOne(p.getName()) != null) {			
+			return "Error: Player already exists in the repository.";
+		}
+
+		return "";
 	}
 
 }

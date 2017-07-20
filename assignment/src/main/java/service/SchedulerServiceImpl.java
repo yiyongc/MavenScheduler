@@ -13,78 +13,67 @@ public class SchedulerServiceImpl implements ISchedulerService {
 	private IGameRepo gameRepo;
 	private IPlayerRepo playerRepo;
 	
-	public SchedulerServiceImpl() {}
+	String emptySearchString = "Error: Search field cannot be empty.";
 	
+	public SchedulerServiceImpl() {
+		//default constructor
+	}
 	
 	public SchedulerServiceImpl(IGameRepo gameRepo, IPlayerRepo playerRepo, IDayRepo dayRepo) {
 		this.dayRepo = dayRepo;
 		this.playerRepo = playerRepo;
 		this.gameRepo = gameRepo;
 	}
-	
-	
+		
 	public String createGame(Game game) {		
 		return gameRepo.save(game);
 	}
 
-	
 	public String createPlayer(Player player) {
 		if (player == null)
 			return "Error: Player is a null object.";
 		
 		Game[] gameList = player.getGames();
-		boolean gameExists = false;
 		
 		if (gameList == null)
-			return "Error: Player does not have any games.";
-				
-		for(Game game : gameList) {
+			return "Error: Player does not have any games.";		
+		
+		for(Game game : player.getGames()) {
 			if (game == null)
-				break;
+				return "Error: Player does not play any game in the System.";
 			if (gameRepo.findOne(game.getName()) != null) {
-				gameExists = true;
-				break;
+				return playerRepo.save(player);
 			}
 		}
 		
-		if (!gameExists) 
-			return "Error: Player does not play any game in the System.";
-		else	
-			return playerRepo.save(player);
+		return "Error: Player does not play any game in the System.";
 	}
-
 	
 	public String createDay(Day day) {
 		if (day == null)
 			return "Error: Day is a null object.";
 		
 		Game[] gameList = day.getGames();
-		boolean gameExists = false;
 		
 		if (gameList == null)
 			return "Error: Day does not have any games.";
 		
 		for(Game game : gameList) {
 			if (game == null)
-				break;
+				return "Error: Day does not contain any game in the System.";
 			if (gameRepo.findOne(game.getName()) != null) {
-				gameExists = true;
-				break;
+				return dayRepo.save(day);
 			}
 		}
 		
-		if (!gameExists) 
-			return "Error: Day does not contain any game in the System.";
-		else	
-			return dayRepo.save(day);
+		return "Error: Day does not contain any game in the System.";
 	}
 
-	
 	public StringBuilder gameWiseReport(String gameName) {
 		StringBuilder result = new StringBuilder();
 		
 		if (gameName.trim().isEmpty()) {
-			result.append("Error: Search field cannot be empty.");
+			result.append(emptySearchString);
 			return result;
 		}
 		
@@ -97,8 +86,16 @@ public class SchedulerServiceImpl implements ISchedulerService {
 		
 		result.append("Game Wise Report for Game " + gameFound.getName() + "\n\n");
 		
+		result.append(gameWiseReportPlayerFinder(gameFound));
+		
+		result.append(gameWiseReportDayFinder(gameFound));
+		
+		return result;
+	}
+	
+	private StringBuilder gameWiseReportPlayerFinder(Game gameFound) {
 		StringBuilder playerList = new StringBuilder();
-		StringBuilder dayList = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		
 		for(Player player : playerRepo.findAll()) {
 			if (player == null)
@@ -108,7 +105,7 @@ public class SchedulerServiceImpl implements ISchedulerService {
 					playerList.append(player.getName() + "\n");
 			}
 		}
-		
+
 		if (playerList.length() != 0) {
 			result.append("Player(s) who play " + gameFound.getName() +": \n");
 			result.append(playerList + "\n");
@@ -118,6 +115,12 @@ public class SchedulerServiceImpl implements ISchedulerService {
 			result.append("There are no players who play the game.\n\n");
 		}
 		
+		return result;
+	}
+	
+	private StringBuilder gameWiseReportDayFinder(Game gameFound){
+		StringBuilder dayList = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		
 		for(Day day : dayRepo.findAll()) {
 			if (day == null)
@@ -140,12 +143,11 @@ public class SchedulerServiceImpl implements ISchedulerService {
 		return result;
 	}
 
-	
 	public StringBuilder playerWiseReport(String playerName) {
 		StringBuilder result = new StringBuilder();
 		
 		if (playerName.trim().isEmpty()) {
-			result.append("Error: Search field cannot be empty.");
+			result.append(emptySearchString);
 			return result;
 		}
 		
@@ -156,6 +158,14 @@ public class SchedulerServiceImpl implements ISchedulerService {
 			return result;
 		}
 		
+		result.append(playerWiseReportGetData(playerFound));
+		
+		return result;
+	}
+	
+	private StringBuilder playerWiseReportGetData(Player playerFound) {
+		StringBuilder result = new StringBuilder();
+		
 		result.append("Player Wise Report for Player " + playerFound.getName() + "\n\n");
 		
 		result.append(playerFound.getName() + "\'s Game(s): \n");
@@ -165,22 +175,9 @@ public class SchedulerServiceImpl implements ISchedulerService {
 		for(Game game : playerGames) {
 			if (game == null)
 				break;
+
+			StringBuilder gamesDaySB = playerWiseReportGetDays(game);
 			
-			StringBuilder gamesDaySB = new StringBuilder();
-			
-			for(Day day : dayRepo.findAll()) {
-				if (day == null)
-					break;
-				
-				for (Game dayGame : day.getGames()) {
-					if (dayGame == null)
-						break;
-					if (game.getName().equalsIgnoreCase(dayGame.getName())) {
-						gamesDaySB.append("Game is played on " + day.getName() + "\n");
-						break;
-					}
-				}
-			}
 			//Check if game is in system
 			if (gamesDaySB.length() != 0) {
 				result.append("Game: " + game.getName() + "\n");
@@ -193,12 +190,31 @@ public class SchedulerServiceImpl implements ISchedulerService {
 		return result;
 	}
 
+	private StringBuilder playerWiseReportGetDays(Game game) {
+		StringBuilder gamesDaySB = new StringBuilder();
+
+		for(Day day : dayRepo.findAll()) {
+			if (day == null)
+				break;
+
+			for (Game dayGame : day.getGames()) {
+				if (dayGame == null)
+					return gamesDaySB;
+				if (game.getName().equalsIgnoreCase(dayGame.getName())) {
+					gamesDaySB.append("Game is played on " + day.getName() + "\n");
+					break;
+				}
+			}
+		}
+		
+		return gamesDaySB;
+	}
 	
 	public StringBuilder dayWiseReport(String dayName) {
 		StringBuilder result = new StringBuilder();
 		
 		if (dayName.trim().isEmpty()) {
-			result.append("Error: Search field cannot be empty.");
+			result.append(emptySearchString);
 			return result;
 		}
 		
@@ -209,42 +225,55 @@ public class SchedulerServiceImpl implements ISchedulerService {
 			return result;
 		}
 		
+		result.append(dayWiseReportGetData(dayFound));
+		
+		return result;
+	}
+	
+	private StringBuilder dayWiseReportGetData(Day dayFound) {
+		StringBuilder result = new StringBuilder();
+		
 		result.append("Day Wise Report for " + dayFound.getName() + "\n\n");
-		
+
 		result.append("Game(s) on " + dayFound.getName() + ": \n");
-		
+
 		Game[] dayGames = dayFound.getGames();
-		
+
 		for(Game game : dayGames) {
 			if (game == null)
 				break;
 			result.append("Game " + game.getName() + "\n");
-			
-			StringBuilder playerInGamesSB = new StringBuilder();
-			
-			for(Player player : playerRepo.findAll()) {
-				if (player == null)
-					break;
-				for (Game playerGame : player.getGames()) {
-					if (playerGame == null)
-						break;
-					if (game.getName().equalsIgnoreCase(playerGame.getName())) {
+
+			result.append(dayWiseReportGetPlayers(game));
+		}
+		
+		return result;
+	}
+	
+	private StringBuilder dayWiseReportGetPlayers(Game game) {
+		StringBuilder playerInGamesSB = new StringBuilder();
+		StringBuilder result = new StringBuilder();
+		
+		for(Player player : playerRepo.findAll()) {
+			if (player == null)
+				break;
+			for (Game playerGame : player.getGames()) {
+				if (playerGame != null && game.getName().equalsIgnoreCase(playerGame.getName())) {
 						playerInGamesSB.append(player.getName() + "\n");
 						break;
-					}
 				}
 			}
-			
-			if(playerInGamesSB.length() != 0) {
-				result.append("Player List:\n");
-				result.append(playerInGamesSB);
-				result.append("\n");
-				playerInGamesSB.delete(0, playerInGamesSB.length());
-			}
-			else {
-				result.append("Game " + game.getName() + " has no players.\n");
-				result.append("\n");
-			}
+		}
+
+		if(playerInGamesSB.length() != 0) {
+			result.append("Player List:\n");
+			result.append(playerInGamesSB);
+			result.append("\n");
+			playerInGamesSB.delete(0, playerInGamesSB.length());
+		}
+		else {
+			result.append("Game " + game.getName() + " has no players.\n");
+			result.append("\n");
 		}
 		
 		return result;
