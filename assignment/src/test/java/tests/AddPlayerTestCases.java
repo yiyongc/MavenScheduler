@@ -15,13 +15,16 @@ import service.SchedulerServiceImpl;
 public class AddPlayerTestCases {
 		
 	ISchedulerService service = new SchedulerServiceImpl(new GameRepoImpl(), new PlayerRepoImpl(), new DayRepoImpl() );
+	String tennisString = "Tennis";
+	String footballString = "Football";
+	String badmintonString = "Badminton";
 	
 	@Test
 	public void addProperPlayer() {
 		Game tennis = new Game("Tennis", 2);
 		service.createGame(tennis);
 		
-		Game[] gameList = { tennis, new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { tennis, new Game("Football", 16), new Game(badmintonString,4) };
 		Player myPlayer = new Player("Tom", gameList);
 		
 		assertEquals("Player " + myPlayer.getName() + " is successfully added.", service.createPlayer(myPlayer));
@@ -29,7 +32,7 @@ public class AddPlayerTestCases {
 	
 	@Test
 	public void addPlayerWithNoGamesInSystem() {
-		Game[] gameList = { new Game("Tennis", 2), new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { new Game("Tennis", 2), new Game("Football", 16), new Game(badmintonString,4) };
 		Player myPlayer = new Player("Tom", gameList);
 		
 		assertEquals("Error: Player does not play any game in the System.", service.createPlayer(myPlayer));
@@ -47,7 +50,7 @@ public class AddPlayerTestCases {
 		Game tennis = new Game("Tennis", 2);
 		service.createGame(tennis);
 		
-		Game[] gameList = { new Game("Tennis", 2), new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { new Game("Tennis", 2), new Game("Football", 16), new Game(badmintonString,4) };
 		Player myPlayer = new Player("", gameList);
 		
 		assertEquals("Error: Player does not have a name.", service.createPlayer(myPlayer));
@@ -58,7 +61,7 @@ public class AddPlayerTestCases {
 		Game tennis = new Game("Tennis", 2);
 		service.createGame(tennis);
 		
-		Game[] gameList = { tennis, new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { tennis, new Game("Football", 16), new Game(badmintonString,4) };
 		Player myPlayer = new Player("Tom", gameList);
 		service.createPlayer(myPlayer);
 		

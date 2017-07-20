@@ -14,19 +14,24 @@ import service.ISchedulerService;
 import service.SchedulerServiceImpl;
 
 public class DayWiseReportTestCases {
-
+	
 	ISchedulerService service = new SchedulerServiceImpl(new GameRepoImpl(), new PlayerRepoImpl(), new DayRepoImpl() );
+	String volleyballString = "VolleyBall";
+	String finalsString = "Finals";
+	
 	
 	@Test
 	public void dayReportEmptySearch() {
 		assertEquals("Error: Search field cannot be empty.", service.dayWiseReport("").toString());
 	}
 	
+	
 	@Test
+	@SuppressWarnings("all")
 	public void dayReportProperOneGame() {
-		Game myGame = new Game("Volleyball", 10);
+		Game myGame = new Game(volleyballString, 10);
 		Game[] gameList = { myGame };
-		Day myDay = new Day("Finals", gameList);
+		Day myDay = new Day(finalsString, gameList);
 		Player myPlayer = new Player("Tom", gameList);
 		Player myPlayer2 = new Player("Tim", gameList);
 		Player myPlayer3 = new Player("Tam", gameList);
@@ -44,16 +49,17 @@ public class DayWiseReportTestCases {
 				+ "Tom\n"
 				+ "Tim\n"
 				+ "Tam\n"
-				+ "\n", service.dayWiseReport("Finals").toString());
+				+ "\n", service.dayWiseReport(finalsString).toString());
 	}
 	
 	
 	@Test
+	@SuppressWarnings("all")
 	public void dayReportProperTwoGames() {
-		Game myGame = new Game("Volleyball", 10);
+		Game myGame = new Game(volleyballString, 10);
 		Game myGame2 = new Game("Tennis", 2);
 		Game[] gameList = { myGame, myGame2 };
-		Day myDay = new Day("Finals", gameList);
+		Day myDay = new Day(finalsString, gameList);
 		Player myPlayer = new Player("Tom", gameList);
 		Player myPlayer2 = new Player("Tim", gameList);
 		Player myPlayer3 = new Player("Tam", gameList);
@@ -77,7 +83,7 @@ public class DayWiseReportTestCases {
 				+ "Tom\n"
 				+ "Tim\n"
 				+ "Tam\n"
-				+ "\n", service.dayWiseReport("Finals").toString());
+				+ "\n", service.dayWiseReport(finalsString).toString());
 	}
 	
 	
@@ -87,12 +93,13 @@ public class DayWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void dayReportWithGamesWithNoPlayers() {
-		Game myGame = new Game("Volleyball", 10);
+		Game myGame = new Game(volleyballString, 10);
 		Game myGame2 = new Game("Tennis", 2);
 		Game[] gameList = { myGame };
 		Game[] gameListDay = { myGame, myGame2 };
-		Day myDay = new Day("Finals", gameListDay);
+		Day myDay = new Day(finalsString, gameListDay);
 		Player myPlayer = new Player("Tom", gameList);
 		Player myPlayer2 = new Player("Tim", gameList);
 		Player myPlayer3 = new Player("Tam", gameList);
@@ -113,7 +120,7 @@ public class DayWiseReportTestCases {
 				+ "\n"
 				+ "Game Tennis\n"
 				+ "Game Tennis has no players.\n"
-				+ "\n", service.dayWiseReport("Finals").toString());
+				+ "\n", service.dayWiseReport(finalsString).toString());
 	}
 
 }

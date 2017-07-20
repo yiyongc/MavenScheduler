@@ -15,13 +15,16 @@ import service.SchedulerServiceImpl;
 public class AddDayTestCases {
 	
 	ISchedulerService service = new SchedulerServiceImpl(new GameRepoImpl(), new PlayerRepoImpl(), new DayRepoImpl() );
+	String tennisString = "Tennis";
+	String footballString = "Football";
+	String badmintonString = "Badminton";
 	
 	@Test
 	public void addProperDay() {
-		Game tennis = new Game("Tennis", 2);
+		Game tennis = new Game(tennisString, 2);
 		service.createGame(tennis);
 		
-		Game[] gameList = { tennis, new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { tennis, new Game(footballString, 16), new Game(badmintonString,4) };
 		Day myDay = new Day("Day One", gameList);
 		
 		assertEquals(myDay.getName() + " is successfully added.", service.createDay(myDay));
@@ -29,7 +32,7 @@ public class AddDayTestCases {
 	
 	@Test
 	public void addDayWithNoGamesInSystem() {
-		Game[] gameList = { new Game("Tennis", 2), new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { new Game(tennisString, 2), new Game(footballString, 16), new Game(badmintonString,4) };
 		Day myDay = new Day("Day One", gameList);
 		
 		assertEquals("Error: Day does not contain any game in the System.", service.createDay(myDay));
@@ -44,10 +47,10 @@ public class AddDayTestCases {
 	
 	@Test
 	public void addDayWithoutName() {
-		Game tennis = new Game("Tennis", 2);
+		Game tennis = new Game(tennisString, 2);
 		service.createGame(tennis);
 		
-		Game[] gameList = { new Game("Tennis", 2), new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { new Game(tennisString, 2), new Game(footballString, 16), new Game(badmintonString,4) };
 		Day myDay = new Day("", gameList);
 		
 		assertEquals("Error: Day does not have a name.", service.createDay(myDay));
@@ -55,10 +58,10 @@ public class AddDayTestCases {
 	
 	@Test
 	public void addDuplicateDay() {
-		Game tennis = new Game("Tennis", 2);
+		Game tennis = new Game(tennisString, 2);
 		service.createGame(tennis);
 		
-		Game[] gameList = { tennis, new Game("Football", 16), new Game("Badminton",4) };
+		Game[] gameList = { tennis, new Game(footballString, 16), new Game(badmintonString,4) };
 		Day myDay = new Day("Tom", gameList);
 		service.createDay(myDay);
 		
