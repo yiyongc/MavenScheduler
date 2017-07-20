@@ -44,15 +44,15 @@ public class GameWiseReportTestCases {
 	@Test
 	@SuppressWarnings("all")
 	public void gameReportProperTwoDays() {
-		Game myGame = new Game("Tennis", 2);
-		Game[] gameList = { myGame };
-		Day myDay = new Day("Day One", gameList);
-		Day myDay2 = new Day("Finals", gameList);
+		Game gameTennis = new Game("Tennis", 2);
+		Game[] gameList = { gameTennis };
+		Day dayOne = new Day("Day One", gameList);
+		Day dayFinals = new Day("Finals", gameList);
 		Player myPlayer = new Player("Tom", gameList);
 		
-		service.createGame(myGame);
-		service.createDay(myDay);
-		service.createDay(myDay2);
+		service.createGame(gameTennis);
+		service.createDay(dayOne);
+		service.createDay(dayFinals);
 		service.createPlayer(myPlayer);
 		
 		assertEquals("Game Wise Report for Game Tennis\n\n"
