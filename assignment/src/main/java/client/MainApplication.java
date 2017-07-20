@@ -11,9 +11,10 @@ import service.SchedulerServiceImpl;
 
 public class MainApplication {
 
+	private MainApplication() {}
+	
 	public static void main(String[] args) {
-		
-		ISchedulerService service = setupService();
+		//Not implemented yet
 		
 		
 	}

@@ -4,8 +4,8 @@ public class Game {
 	private String name;
 	private int noOfPlayers;
 	
-	public Game(String name) {
-		this.name = name;
+	public Game() {
+		//default constructor
 	}
 	
 	public Game(String name, int noOfPlayers) {

@@ -80,8 +80,8 @@ public class SchedulerServiceImpl implements ISchedulerService {
 	}
 
 	
-	public StringBuffer gameWiseReport(String gameName) {
-		StringBuffer result = new StringBuffer();
+	public StringBuilder gameWiseReport(String gameName) {
+		StringBuilder result = new StringBuilder();
 		
 		if (gameName.trim().isEmpty()) {
 			result.append("Error: Search field cannot be empty.");
@@ -141,8 +141,8 @@ public class SchedulerServiceImpl implements ISchedulerService {
 	}
 
 	
-	public StringBuffer playerWiseReport(String playerName) {
-		StringBuffer result = new StringBuffer();
+	public StringBuilder playerWiseReport(String playerName) {
+		StringBuilder result = new StringBuilder();
 		
 		if (playerName.trim().isEmpty()) {
 			result.append("Error: Search field cannot be empty.");
@@ -194,8 +194,8 @@ public class SchedulerServiceImpl implements ISchedulerService {
 	}
 
 	
-	public StringBuffer dayWiseReport(String dayName) {
-		StringBuffer result = new StringBuffer();
+	public StringBuilder dayWiseReport(String dayName) {
+		StringBuilder result = new StringBuilder();
 		
 		if (dayName.trim().isEmpty()) {
 			result.append("Error: Search field cannot be empty.");

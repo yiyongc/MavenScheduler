@@ -10,26 +10,10 @@ public class DayRepoImpl implements IDayRepo {
 		
 		StringBuilder result = new StringBuilder();
 		
-		//Search for empty name
-		if (d.getName().trim().isEmpty()) {
-			result.append("Error: Day does not have a name.");
-			
-			return result.toString();
-		}
+		result.append(errorChecking(d));
 		
-		//Search for zero players
-		if (d.getGames().length == 0) {
-			result.append("Error: Day cannot have no games.");
-			
+		if (result.length() != 0)
 			return result.toString();
-		}
-		
-		//Search for duplicates
-		if (findOne(d.getName()) != null) {			
-			result.append("Error: Day already exists in the repository.");
-			
-			return result.toString();
-		}
 			
 		for (int i = 0; i < days.length ; i++) {
 			if (days[i] == null) {
@@ -73,6 +57,25 @@ public class DayRepoImpl implements IDayRepo {
 
 	public Day[] findAll() {
 		return days;
+	}
+	
+	private String errorChecking(Day d) {
+		//Search for empty name
+		if (d.getName().trim().isEmpty()) {
+			return "Error: Day does not have a name.";
+		}
+
+		//Search for zero players
+		if (d.getGames().length == 0) {
+			return "Error: Day cannot have no games.";
+		}
+
+		//Search for duplicates
+		if (findOne(d.getName()) != null) {			
+			return "Error: Day already exists in the repository.";
+		}
+		
+		return "";
 	}
 
 }

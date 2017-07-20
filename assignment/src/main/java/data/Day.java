@@ -4,8 +4,8 @@ public class Day {
 	private String name;
 	private Game[] games;
 	
-	public Day(String name) {
-		this.name = name;
+	public Day() {
+		//Default constructor
 	}
 	
 	public Day(String name, Game[] games) {

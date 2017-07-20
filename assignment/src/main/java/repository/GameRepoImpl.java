@@ -6,7 +6,9 @@ public class GameRepoImpl implements IGameRepo {
 	
 	private Game[] games = new Game[5];
 	
-	public GameRepoImpl() {}
+	public GameRepoImpl() {
+		//default constructor
+	}
 	
 	public GameRepoImpl(Game[] games) {
 		this.games = games;
@@ -17,33 +19,10 @@ public class GameRepoImpl implements IGameRepo {
 		
 		StringBuilder result = new StringBuilder();
 		
-		//Search for null object
-		if (g == null) {
-			result.append("Error: Game is a null object.");
-			
-			return result.toString();
-		}
+		result.append(errorChecking(g));
 		
-		//Search for empty name
-		if (g.getName().trim().isEmpty()) {
-			result.append("Error: Game does not have a name.");
-			
+		if(result.length() != 0)
 			return result.toString();
-		}
-		
-		//Search for zero players
-		if (g.getNoOfPlayers() <= 0) {
-			result.append("Error: Game cannot have no players.");
-			
-			return result.toString();
-		}
-		
-		//Search for duplicates
-		if (findOne(g.getName()) != null) {			
-			result.append("Error: Game already exists in the repository.");
-			
-			return result.toString();
-		}
 			
 		for (int i = 0; i < games.length ; i++) {
 			if (games[i] == null) {
@@ -90,4 +69,28 @@ public class GameRepoImpl implements IGameRepo {
 		return games;
 	}
 
+	
+	private String errorChecking(Game g) {
+		//Search for null object
+		if (g == null) {
+			return "Error: Game is a null object.";
+		}
+
+		//Search for empty name
+		if (g.getName().trim().isEmpty()) {
+			return "Error: Game does not have a name.";
+		}
+
+		//Search for zero players
+		if (g.getNoOfPlayers() <= 0) {
+			return "Error: Game cannot have no players.";
+		}
+
+		//Search for duplicates
+		if (findOne(g.getName()) != null) {			
+			return "Error: Game already exists in the repository.";
+		}
+		
+		return "";
+	}
 }

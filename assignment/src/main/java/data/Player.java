@@ -4,8 +4,8 @@ public class Player {
 	private String name;
 	private Game[] games;
 	
-	public Player(String name) {
-		this.name = name;		
+	public Player() {
+		//default constructor	
 	}
 	
 	public Player(String name, Game[] games) {
