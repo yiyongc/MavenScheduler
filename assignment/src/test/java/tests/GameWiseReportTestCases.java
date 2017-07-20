@@ -23,6 +23,7 @@ public class GameWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void gameReportProperOneDay() {
 		Game myGame = new Game("Tennis", 2);
 		Game[] gameList = { myGame };
@@ -41,6 +42,7 @@ public class GameWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void gameReportProperTwoDays() {
 		Game myGame = new Game("Tennis", 2);
 		Game[] gameList = { myGame };
@@ -67,6 +69,7 @@ public class GameWiseReportTestCases {
 	}
 
 	@Test
+	@SuppressWarnings("all")
 	public void gameReportGameExistsButDayAndPlayerDoesnt() {
 		Game myGame = new Game("Tennis", 2);
 		
@@ -78,6 +81,7 @@ public class GameWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void gameReportDayExistsButPlayerDoesnt() {
 		Game myGame = new Game("Tennis", 2);
 		Game[] gameList = { myGame };
@@ -93,6 +97,7 @@ public class GameWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void gameReportPlayerExistsButDayDoesnt() {
 		Game myGame = new Game("Tennis", 2);
 		Game[] gameList = { myGame };

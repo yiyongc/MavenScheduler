@@ -23,6 +23,7 @@ public class PlayerWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void playerReportProperOneGame() {
 		Game myGame = new Game("Tennis", 2);
 		Game[] gameList = { myGame };
@@ -44,6 +45,7 @@ public class PlayerWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void playerReportProperTwoGames() {
 		Game myGame = new Game("Tennis", 2);
 		Game myGame2 = new Game("Tennis Doubles", 4);
@@ -75,6 +77,7 @@ public class PlayerWiseReportTestCases {
 	}
 	
 	@Test
+	@SuppressWarnings("all")
 	public void playerReportWithoutGamesNotInSystem() {
 		Game myGame = new Game("Tennis", 2);
 		Game myGame2 = new Game("Tennis Doubles", 4);

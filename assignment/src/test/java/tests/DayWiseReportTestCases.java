@@ -16,7 +16,7 @@ import service.SchedulerServiceImpl;
 public class DayWiseReportTestCases {
 	
 	ISchedulerService service = new SchedulerServiceImpl(new GameRepoImpl(), new PlayerRepoImpl(), new DayRepoImpl() );
-	String volleyballString = "VolleyBall";
+	String volleyballString = "Volleyball";
 	String finalsString = "Finals";
 	
 	
