@@ -5,7 +5,7 @@ public class Game {
 	private int noOfPlayers;
 	
 	public Game() {
-		//default constructor
+		//No argument constructor
 	}
 	
 	public Game(String name, int noOfPlayers) {
