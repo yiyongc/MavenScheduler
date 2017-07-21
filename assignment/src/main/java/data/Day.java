@@ -5,7 +5,7 @@ public class Day {
 	private Game[] games;
 	
 	public Day() {
-		//Default constructor
+		//No argument constructor
 	}
 	
 	public Day(String name, Game[] games) {
