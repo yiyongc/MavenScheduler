@@ -27,7 +27,7 @@ public class MoneyTransferTests {
 			service.createAccount(acc1);
 			service.createAccount(acc2);
 		} catch (InvalidAccountCreationException e) {
-			LOGGER.log(Level.FINE, e.getMessage());
+			LOGGER.info(e.getMessage());
 		}
 		
 	}

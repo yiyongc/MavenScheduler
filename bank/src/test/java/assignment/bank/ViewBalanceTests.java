@@ -23,7 +23,7 @@ public class ViewBalanceTests {
 		try {
 			service.createAccount(account);
 		} catch (InvalidAccountCreationException e) {
-			LOGGER.log(Level.FINE, e.getMessage());
+			LOGGER.info(e.getMessage());
 		}
 	}
 	

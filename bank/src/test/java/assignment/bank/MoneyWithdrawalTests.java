@@ -28,7 +28,7 @@ public class MoneyWithdrawalTests {
 			Account richAccount = new Account(2, 2000);
 			service.createAccount(richAccount);			
 		} catch (InvalidAccountCreationException e) {
-			LOGGER.log(Level.FINE, e.getMessage());
+			LOGGER.info(e.getMessage());
 		}
 	}
 	static

@@ -64,7 +64,7 @@ public class AccountRepoImpl implements IAccountRepo {
 		throw new InvalidAccountException();
 	}
 
-	public Account withdraw(int accNum, double amount) throws InvalidAccountException, WithdrawLimitException, InsufficientBalanceException {
+	public Account withdraw(int accNum, double amount) throws WithdrawLimitException, InsufficientBalanceException, InvalidAccountException {
 		Account accountFound = null;
 		
 		for (Account account : accounts) {
