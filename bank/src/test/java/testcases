@@ -6,7 +6,7 @@ Then  : System should create the Account with $100 balance
 2)
 Given : User attempts to add an Account
 When  : He creates account with $10
-Then  : System should throw InsufficientBalanceException
+Then  : System should throw InvalidAccountCreationException
 
 3)
 Given : User attempts to withdraw money

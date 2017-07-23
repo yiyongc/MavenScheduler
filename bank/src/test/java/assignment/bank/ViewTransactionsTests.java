@@ -10,26 +10,31 @@ import org.junit.Test;
 
 import assignment.bank.beans.Account;
 import assignment.bank.beans.Transaction;
+import assignment.bank.exceptions.IncorrectDateRangeException;
+import assignment.bank.exceptions.InsufficientBalanceException;
+import assignment.bank.exceptions.InvalidAccountCreationException;
+import assignment.bank.exceptions.InvalidAccountException;
+import assignment.bank.exceptions.InvalidAmountException;
+import assignment.bank.exceptions.WithdrawLimitException;
 import assignment.bank.service.ServiceBankImpl;
 import assignment.bank.utility.UniqueNumberGenerator;
 
 public class ViewTransactionsTests {
 
 	ServiceBankImpl service = new ServiceBankImpl();
-	Account account = new Account(UniqueNumberGenerator.generateUniqueAccNo(), 1992);
-	
-	{
-		service.createAccount(account);
-	}
-	
+		
 	@Test
-	public void viewLastTenTransactions() {
+	public void viewLastTenTransactions() throws InvalidAccountException, InvalidAmountException, InsufficientBalanceException, WithdrawLimitException, InvalidAccountCreationException {
+		Account account = new Account(1, 1992);
+		service.createAccount(account);
+		
+		//5 deposits, 6 withdrawals
 		for (int i = 0; i < 5; i++)
 			service.deposit(1, 10);
 		for (int j = 0; j < 6; j++)
 			service.withdraw(1, 5);
 		
-		//5 deposits, 6 withdrawals
+		
 		ArrayList<Transaction> dummy = account.getTransactions();
 		dummy.remove(10);
 		
@@ -37,12 +42,12 @@ public class ViewTransactionsTests {
 	}
 	
 	@Test (expected = assignment.bank.exceptions.InvalidAccountException.class)
-	public void invalidAccountTransactions() {
+	public void invalidAccountTransactions() throws InvalidAccountException {
 		service.printTransactions(2);
 	}
 	
 	@Test
-	public void viewDateRangeTransactions() {
+	public void viewDateRangeTransactions() throws InvalidAccountCreationException, InvalidAccountException, InvalidAmountException, IncorrectDateRangeException {
 		Calendar c = Calendar.getInstance();
 		c.set(2017, 0, 10);
 		Date myDate = c.getTime();
@@ -51,6 +56,8 @@ public class ViewTransactionsTests {
 														0, 
 														"Dummy transaction", 
 														100);
+		Account account = new Account(1, 1992);
+		service.createAccount(account);
 		account.addTransaction(dummyTransaction);
 		
 		for (int i = 0; i < 10; i++)
@@ -63,13 +70,18 @@ public class ViewTransactionsTests {
 	}
 	
 	@Test (expected = assignment.bank.exceptions.IncorrectDateRangeException.class)
-	public void invalidDateRangeTransactions() {
+	public void invalidDateRangeTransactions() throws IncorrectDateRangeException, InvalidAccountException, InvalidAccountCreationException {
+		Account account = new Account(1, 1992);
+		service.createAccount(account);
+		
 		service.printTransactions(1, "2017/7/10", "2017/6/10");
 	}
 	
 	@Test
-	public void noTransactionHistory() {
+	public void noTransactionHistory() throws InvalidAccountException, IncorrectDateRangeException, InvalidAccountCreationException {
 		ArrayList<Transaction> emptyHistory = new ArrayList<Transaction>();
+		Account account = new Account(1, 1992);
+		service.createAccount(account);
 		
 		assertEquals(emptyHistory, service.printTransactions(1));
 		assertEquals(emptyHistory, service.printTransactions(1, "2017/5/5", "2017/5/5"));

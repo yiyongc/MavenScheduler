@@ -2,8 +2,8 @@ package assignment.bank.utility;
 
 public class UniqueNumberGenerator {
 	
-	private static int accountNo = 0;
-	private static int transactionNo = 0;
+	private static int accountNo = 1;
+	private static int transactionNo = 1;
 	
 	private UniqueNumberGenerator(){}
 	

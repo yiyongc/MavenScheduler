@@ -6,6 +6,7 @@ import assignment.bank.beans.Account;
 import assignment.bank.exceptions.InsufficientBalanceException;
 import assignment.bank.exceptions.InvalidAccountCreationException;
 import assignment.bank.exceptions.InvalidAccountException;
+import assignment.bank.exceptions.WithdrawLimitException;
 
 public interface IAccountRepo {
 
@@ -16,9 +17,9 @@ public interface IAccountRepo {
 	@SuppressWarnings("rawtypes")
 	public List findAll();
 	
-	public String deposit(int accNum, double amount) throws InvalidAccountException;
+	public Account deposit(int accNum, double amount) throws InvalidAccountException;
 	
-	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException;
+	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException, WithdrawLimitException;
 	
 	public Account fundTransfer(int fromAcc, int toAcc, double amount) throws InvalidAccountException, InsufficientBalanceException;
 	

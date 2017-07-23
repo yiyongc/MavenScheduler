@@ -5,42 +5,57 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
+import assignment.bank.exceptions.InsufficientBalanceException;
+import assignment.bank.exceptions.InvalidAccountCreationException;
+import assignment.bank.exceptions.InvalidAccountException;
+import assignment.bank.exceptions.InvalidAmountException;
+import assignment.bank.exceptions.WithdrawLimitException;
 import assignment.bank.service.ServiceBankImpl;
-import assignment.bank.utility.UniqueNumberGenerator;
 
 public class MoneyWithdrawalTests {
 
 	
-	ServiceBankImpl service = new ServiceBankImpl();
-	Account account = new Account(UniqueNumberGenerator.generateUniqueAccNo(), 2000);
+	static ServiceBankImpl service = new ServiceBankImpl();
+	
+	public static void setUpAccounts() {
+		try {
+			Account normalAccount = new Account(1, 500);
+			service.createAccount(normalAccount);
+			Account richAccount = new Account(2, 2000);
+			service.createAccount(richAccount);			
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
+	}
+	static
 	{
-		service.createAccount(account);
+		setUpAccounts();
 	}
 	
 	@Test
-	public void validWithdrawal() {	
-		assertEquals(1900, service.withdraw(1, 100).getAccBalance(), 0.01);
+	public void validWithdrawal() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException, WithdrawLimitException {	
+		assertEquals(400, service.withdraw(1, 100).getAccBalance(), 0.01);
 	}
 	
 	@Test (expected = assignment.bank.exceptions.InsufficientBalanceException.class) 
-	public void insufficientBalanceForWithdrawal() {
-		service.withdraw(1, 2001);
+	public void insufficientBalanceForWithdrawal() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException, WithdrawLimitException {
+		service.withdraw(1, 1000);
 	}
 	
 	@Test (expected = assignment.bank.exceptions.WithdrawLimitException.class) 
-	public void withdrawLimitExceeded() {
-		service.withdraw(1, 500);
-		service.withdraw(1, 500);
-		service.withdraw(1, 1);
+	public void withdrawLimitExceeded() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException {
+		service.withdraw(2, 500);
+		service.withdraw(2, 500);
+		service.withdraw(2, 1);
 	}
 	
 	@Test (expected = assignment.bank.exceptions.InvalidAccountException.class)
-	public void invalidAccountWithdrawal() {
-		service.withdraw(2, 10);
+	public void invalidAccountWithdrawal() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException, WithdrawLimitException {
+		service.withdraw(3, 10);
 	}
 	
 	@Test (expected = assignment.bank.exceptions.InvalidAmountException.class)
-	public void invalidAmountWithdrawal() {	
+	public void invalidAmountWithdrawal() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException, WithdrawLimitException {	
 		service.withdraw(1, -10);
 	}
 }

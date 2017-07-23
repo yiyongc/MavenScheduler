@@ -9,6 +9,7 @@ import assignment.bank.beans.Transaction;
 import assignment.bank.exceptions.InsufficientBalanceException;
 import assignment.bank.exceptions.InvalidAccountCreationException;
 import assignment.bank.exceptions.InvalidAccountException;
+import assignment.bank.exceptions.WithdrawLimitException;
 import assignment.bank.utility.UniqueNumberGenerator;
 
 public class AccountRepoImpl implements IAccountRepo {
@@ -41,7 +42,7 @@ public class AccountRepoImpl implements IAccountRepo {
 		return accounts;
 	}
 
-	public String deposit(int accNum, double amount) throws InvalidAccountException {
+	public Account deposit(int accNum, double amount) throws InvalidAccountException {
 		
 		for (Account account : accounts) {
 			if (account.getAccNumber() == accNum) {
@@ -56,38 +57,59 @@ public class AccountRepoImpl implements IAccountRepo {
 				
 				account.addTransaction(transaction);
 				
-				return "$" + amount + " has successfully been deposited into account " + accNum;
+				return account;
 			}
 		}
 		
 		throw new InvalidAccountException();
 	}
 
-	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException {
+	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException, WithdrawLimitException {
+		Account accountFound = null;
 		
 		for (Account account : accounts) {
-			if (account.getAccBalance() == accNum) {
-				double newBalance = account.getAccBalance() - amount;
-				
-				if (newBalance < 0)
-					throw new InsufficientBalanceException(amount ,"withdraw");
-				else {
-					account.setAccBalance(newBalance);
-					
-					Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(),
-							  new Date(),
-							  amount,
-							  "Withdrawal of $"+amount,
-							  newBalance);
-					
-					account.addTransaction(transaction);
-					
-					return account;
-				}
-			}
+			if (account.getAccNumber() == accNum) 
+				accountFound = account;
 		}
 		
-		throw new InvalidAccountException();
+		if (accountFound == null)
+			throw new InvalidAccountException();
+		
+		if (withdrawLimitReached(accountFound, amount))
+			throw new WithdrawLimitException(amount);
+		
+		double newBalance = accountFound.getAccBalance() - amount;
+		
+		if (newBalance < 0)
+			throw new InsufficientBalanceException(amount ,"withdraw");
+		else {
+			accountFound.setAccBalance(newBalance);
+			
+			Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(),
+					  new Date(),
+					  -amount,
+					  "Withdrawal of $"+amount,
+					  newBalance);
+			
+			accountFound.addTransaction(transaction);
+			
+			return accountFound;
+		}
+	}
+		
+	private boolean withdrawLimitReached(Account acc, double amount) {
+		Date currDate = new Date();
+		double total = 0;
+		
+		for (Transaction transaction : acc.getTransactions()) {
+			if (transaction.getDate().equals(currDate)){
+				double amt = transaction.getAmount();
+				if (amt < 0) //negative is withdrawal
+					total += amt;
+			}
+		}
+		System.out.println(total + amount);
+		return (Math.abs(total) + amount > 1000);
 	}
 
 	public Account fundTransfer(int fromAcc, int toAcc, double amount) throws InvalidAccountException, InsufficientBalanceException {
@@ -117,7 +139,7 @@ public class AccountRepoImpl implements IAccountRepo {
 				
 				Transaction transactionSource = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(),
 						currDate,
-						amount,
+						-amount,
 						"Transfer of $"+amount + " to " + toAcc,
 						newBalanceSource);
 				
@@ -139,7 +161,7 @@ public class AccountRepoImpl implements IAccountRepo {
 	public Account getBalance(int accNumber) throws InvalidAccountException {
 		
 		for (Account account : accounts) {
-			if (account.getAccBalance() == accNumber) {
+			if (account.getAccNumber() == accNumber) {
 				return account;
 			}
 		}
