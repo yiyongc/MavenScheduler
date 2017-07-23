@@ -80,7 +80,9 @@ public class ServiceBankImpl implements IServiceBank {
 				throw new IncorrectDateRangeException(fromDate, toDate);
 			
 			ArrayList<Transaction> searchResult = new ArrayList<Transaction>();
-			ArrayList<Transaction> transHistory = account.getTransactions();
+			
+			@SuppressWarnings("unchecked")
+			ArrayList<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
 			
 			for (Transaction transaction : transHistory) {
 				Date transDate = transaction.getDate();
@@ -101,7 +103,9 @@ public class ServiceBankImpl implements IServiceBank {
 			throw new InvalidAccountException();
 		
 		Account account = accountRepo.findOne(accNum);
-		ArrayList<Transaction> transHistory = account.getTransactions();
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
 		ArrayList<Transaction> searchResult = new ArrayList<Transaction>();
 		
 		int lengthOfHistory = transHistory.size();

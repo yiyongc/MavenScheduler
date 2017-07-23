@@ -64,7 +64,7 @@ public class AccountRepoImpl implements IAccountRepo {
 		throw new InvalidAccountException();
 	}
 
-	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException, WithdrawLimitException {
+	public Account withdraw(int accNum, double amount) throws InvalidAccountException, WithdrawLimitException, InsufficientBalanceException {
 		Account accountFound = null;
 		
 		for (Account account : accounts) {
@@ -101,15 +101,18 @@ public class AccountRepoImpl implements IAccountRepo {
 		Date currDate = new Date();
 		double total = 0;
 		
-		for (Transaction transaction : acc.getTransactions()) {
+		@SuppressWarnings("unchecked")
+		ArrayList<Transaction> transactionHistory = (ArrayList<Transaction>) acc.getTransactions();
+		
+		for (Transaction transaction : transactionHistory) {
 			if (transaction.getDate().equals(currDate)){
 				double amt = transaction.getAmount();
 				if (amt < 0) //negative is withdrawal
 					total += amt;
 			}
 		}
-		System.out.println(total + amount);
-		return (Math.abs(total) + amount > 1000);
+	
+		return Math.abs(total) + amount > 1000;
 	}
 
 	public Account fundTransfer(int fromAcc, int toAcc, double amount) throws InvalidAccountException, InsufficientBalanceException {

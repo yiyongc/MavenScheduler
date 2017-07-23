@@ -47,11 +47,18 @@ public class Transaction {
 		
 		Transaction other = (Transaction) o;
 		
-		return (this.getTransID() == other.getTransID() &&
-				this.getDate().compareTo(other.getDate()) == 0 &&
-				this.getAmount() == other.getAmount() &&
-				this.getBalance() == other.getBalance() &&
-				this.getDescription().equals(other.getDescription()));
+		boolean result = true;
+		
+		if (this.getTransID() != other.getTransID() ||
+			this.getDate().compareTo(other.getDate()) != 0 ||
+			Double.compare(this.getAmount(), other.getAmount()) != 0)
+			result = false;
+		
+		if (Double.compare(this.getBalance(), other.getBalance()) != 0 ||
+			!this.getDescription().equals(other.getDescription()))
+			result = false;
+		
+		return result;
 	 }
 	 
 	 @Override

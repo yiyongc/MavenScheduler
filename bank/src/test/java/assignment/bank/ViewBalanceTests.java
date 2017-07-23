@@ -8,7 +8,6 @@ import assignment.bank.beans.Account;
 import assignment.bank.exceptions.InvalidAccountCreationException;
 import assignment.bank.exceptions.InvalidAccountException;
 import assignment.bank.service.ServiceBankImpl;
-import assignment.bank.utility.UniqueNumberGenerator;
 
 public class ViewBalanceTests {
 

@@ -35,7 +35,8 @@ public class ViewTransactionsTests {
 			service.withdraw(1, 5);
 		
 		
-		ArrayList<Transaction> dummy = account.getTransactions();
+		@SuppressWarnings("unchecked")
+		ArrayList<Transaction> dummy = (ArrayList<Transaction>) account.getTransactions();
 		dummy.remove(10);
 		
 		assertEquals(dummy, service.printTransactions(1));

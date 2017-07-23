@@ -1,6 +1,7 @@
 package assignment.bank.beans;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Account {
@@ -27,7 +28,8 @@ public class Account {
 		this.accBalance = newBalance;
 	}
 	
-	public ArrayList<Transaction> getTransactions() {
+	@SuppressWarnings("rawtypes")
+	public List getTransactions() {
 		return transactionHistory;
 	}
 	

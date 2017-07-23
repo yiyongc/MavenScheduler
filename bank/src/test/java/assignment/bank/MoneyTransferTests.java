@@ -24,7 +24,7 @@ public class MoneyTransferTests {
 			service.createAccount(acc1);
 			service.createAccount(acc2);
 		} catch (InvalidAccountCreationException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	
