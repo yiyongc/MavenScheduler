@@ -1,6 +1,7 @@
 package assignment.bank.beans;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Transaction {
 
@@ -38,5 +39,24 @@ public class Transaction {
 		return balance;
 	}
 
+	
+	@Override
+	 public boolean equals(Object o) {
+		if (!(o instanceof Transaction))
+			return false;
+		
+		Transaction other = (Transaction) o;
+		
+		return (this.getTransID() == other.getTransID() &&
+				this.getDate().compareTo(other.getDate()) == 0 &&
+				this.getAmount() == other.getAmount() &&
+				this.getBalance() == other.getBalance() &&
+				this.getDescription().equals(other.getDescription()));
+	 }
+	 
+	 @Override
+	 public int hashCode() {
+	    return Objects.hash(transID);
+	 }
 	
 }

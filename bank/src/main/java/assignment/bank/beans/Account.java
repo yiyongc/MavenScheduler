@@ -1,6 +1,7 @@
 package assignment.bank.beans;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Account {
 	
@@ -33,4 +34,19 @@ public class Account {
 	public void addTransaction(Transaction transaction) {
 		transactionHistory.add(transaction);
 	}
+	
+	 @Override
+	 public boolean equals(Object o) {
+		if (!(o instanceof Account))
+			return false;
+		
+		Account other = (Account) o;
+		
+		return this.getAccNumber() == other.getAccNumber();
+	 }
+	 
+	 @Override
+	 public int hashCode() {
+	    return Objects.hash(accNumber);
+	 }
 }
