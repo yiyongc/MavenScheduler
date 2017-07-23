@@ -19,7 +19,7 @@ public class ViewBalanceTests {
 		try {
 			service.createAccount(account);
 		} catch (InvalidAccountCreationException e) {
-			e.printStackTrace();
+			System.err.println(e);
 		}
 	}
 	

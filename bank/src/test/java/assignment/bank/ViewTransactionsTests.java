@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class ViewTransactionsTests {
 		
 		
 		@SuppressWarnings("unchecked")
-		ArrayList<Transaction> dummy = (ArrayList<Transaction>) account.getTransactions();
+		List<Transaction> dummy = (ArrayList<Transaction>) account.getTransactions();
 		dummy.remove(10);
 		
 		assertEquals(dummy, service.printTransactions(1));
@@ -64,7 +65,7 @@ public class ViewTransactionsTests {
 		for (int i = 0; i < 10; i++)
 			service.deposit(1, 10);
 		
-		ArrayList<Transaction> resultantSearch = new ArrayList<Transaction>();
+		List<Transaction> resultantSearch = new ArrayList<>();
 		resultantSearch.add(dummyTransaction);
 		
 		assertEquals(resultantSearch, service.printTransactions(1, "2017/1/10", "2017/2/10"));
@@ -80,7 +81,7 @@ public class ViewTransactionsTests {
 	
 	@Test
 	public void noTransactionHistory() throws InvalidAccountException, IncorrectDateRangeException, InvalidAccountCreationException {
-		ArrayList<Transaction> emptyHistory = new ArrayList<Transaction>();
+		List<Transaction> emptyHistory = new ArrayList<>();
 		Account account = new Account(1, 1992);
 		service.createAccount(account);
 		

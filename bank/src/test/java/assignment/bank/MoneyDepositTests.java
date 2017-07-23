@@ -18,7 +18,6 @@ public class MoneyDepositTests {
 	public void validDeposit() throws InvalidAccountCreationException, InvalidAccountException, InvalidAmountException {
 		Account validAccount = new Account(1, 100);
 		service.createAccount(validAccount);
-		System.out.println(validAccount.getAccNumber());
 		
 		assertEquals(110, service.deposit(1, 10).getAccBalance(), 0.01);
 	}

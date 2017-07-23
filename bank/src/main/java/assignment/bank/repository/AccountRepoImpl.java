@@ -14,7 +14,7 @@ import assignment.bank.utility.UniqueNumberGenerator;
 
 public class AccountRepoImpl implements IAccountRepo {
 	
-	private ArrayList<Account> accounts = new ArrayList<Account>();
+	private List<Account> accounts = new ArrayList<>();
 
 	public String addAccount(Account account) throws InvalidAccountCreationException {
 		

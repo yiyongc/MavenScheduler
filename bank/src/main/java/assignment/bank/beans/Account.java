@@ -8,12 +8,12 @@ public class Account {
 	
 	private int accNumber;
 	private double accBalance;
-	private ArrayList<Transaction> transactionHistory;
+	private List<Transaction> transactionHistory;
 	
 	public Account(int accNumber, double balance) {
 		this.accNumber = accNumber;
 		this.accBalance = balance;
-		this.transactionHistory = new ArrayList<Transaction>();
+		this.transactionHistory = new ArrayList<>();
 	}
 	
 	public int getAccNumber() {

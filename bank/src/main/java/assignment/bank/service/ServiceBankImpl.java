@@ -79,14 +79,14 @@ public class ServiceBankImpl implements IServiceBank {
 			if (fromDate.after(toDate))
 				throw new IncorrectDateRangeException(fromDate, toDate);
 			
-			ArrayList<Transaction> searchResult = new ArrayList<Transaction>();
+			List<Transaction> searchResult = new ArrayList<>();
 			
 			@SuppressWarnings("unchecked")
 			ArrayList<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
 			
 			for (Transaction transaction : transHistory) {
 				Date transDate = transaction.getDate();
-				if (transDate.equals(fromDate) || transDate.equals(toDate) || (transDate.after(fromDate) && transDate.before(toDate))) 
+				if (dateWithinRange(transDate, fromDate, toDate)) 
 					searchResult.add(transaction);
 			}
 			
@@ -95,6 +95,10 @@ public class ServiceBankImpl implements IServiceBank {
 		} catch (ParseException e) {
 			throw new IncorrectDateRangeException();
 		}
+	}
+	
+	private boolean dateWithinRange(Date date, Date fromDate, Date toDate) {
+		return date.equals(fromDate) || date.equals(toDate) || (date.after(fromDate) && date.before(toDate));
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -105,8 +109,8 @@ public class ServiceBankImpl implements IServiceBank {
 		Account account = accountRepo.findOne(accNum);
 		
 		@SuppressWarnings("unchecked")
-		ArrayList<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
-		ArrayList<Transaction> searchResult = new ArrayList<Transaction>();
+		List<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
+		List<Transaction> searchResult = new ArrayList<>();
 		
 		int lengthOfHistory = transHistory.size();
 		int startOfSearch;

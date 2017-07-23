@@ -13,10 +13,9 @@ import assignment.bank.service.ServiceBankImpl;
 
 public class MoneyTransferTests {
 
-	static ServiceBankImpl service = new ServiceBankImpl();
+	ServiceBankImpl service = new ServiceBankImpl();
 	
 	
-	static
 	{
 		Account acc1 = new Account(1, 100);
 		Account acc2 = new Account(2, 100);
@@ -24,8 +23,9 @@ public class MoneyTransferTests {
 			service.createAccount(acc1);
 			service.createAccount(acc2);
 		} catch (InvalidAccountCreationException e) {
-			throw new RuntimeException(e);
+			System.err.println(e);
 		}
+		
 	}
 	
 	@Test
