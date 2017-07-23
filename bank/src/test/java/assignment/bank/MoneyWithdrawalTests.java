@@ -2,6 +2,9 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -16,6 +19,7 @@ public class MoneyWithdrawalTests {
 
 	
 	static ServiceBankImpl service = new ServiceBankImpl();
+	private static final Logger LOGGER = Logger.getLogger( MoneyWithdrawalTests.class.getName() );
 	
 	public static void setUpAccounts() {
 		try {
@@ -24,7 +28,7 @@ public class MoneyWithdrawalTests {
 			Account richAccount = new Account(2, 2000);
 			service.createAccount(richAccount);			
 		} catch (InvalidAccountCreationException e) {
-			System.err.println(e);
+			LOGGER.log(Level.FINE, e.getMessage());
 		}
 	}
 	static
