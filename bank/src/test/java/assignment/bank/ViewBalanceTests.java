@@ -12,19 +12,19 @@ import assignment.bank.service.ServiceBankImpl;
 public class ViewBalanceTests {
 
 	ServiceBankImpl service = new ServiceBankImpl();
-	
-	public void setup() throws InvalidAccountCreationException	{
+
+	public void setup() throws InvalidAccountCreationException {
 		Account account = new Account(1, 1992);
 		service.createAccount(account);
 	}
-	
+
 	@Test
 	public void validViewBalance() throws InvalidAccountException, InvalidAccountCreationException {
 		setup();
 		assertEquals(1992, service.showBalance(1).getAccBalance(), 0.01);
 	}
-	
-	@Test (expected = assignment.bank.exceptions.InvalidAccountException.class)
+
+	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountView() throws InvalidAccountException {
 		service.showBalance(2);
 	}
