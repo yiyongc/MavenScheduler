@@ -2,9 +2,6 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -16,29 +13,26 @@ import assignment.bank.service.ServiceBankImpl;
 
 public class MoneyTransferTests {
 
-	private static ServiceBankImpl service = new ServiceBankImpl();
-	private static final Logger LOGGER = Logger.getLogger( MoneyTransferTests.class.getName() );
+	ServiceBankImpl service = new ServiceBankImpl();
 	
-	static
-	{
+	public void setup() throws InvalidAccountCreationException	{
 		Account acc1 = new Account(1, 100);
 		Account acc2 = new Account(2, 100);
-		try {
-			service.createAccount(acc1);
-			service.createAccount(acc2);
-		} catch (InvalidAccountCreationException e) {
-			LOGGER.info(e.getMessage());
-		}
-		
+		service.createAccount(acc1);
+		service.createAccount(acc2);
 	}
 	
 	@Test
-	public void validTransfer() throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException {
+	public void validTransfer() throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException, InvalidAccountCreationException {
+		setup();
+	
 		assertEquals(90, service.fundTransfer(1, 2, 10).getAccBalance(), 0.01);
 	}
 	
 	@Test (expected = assignment.bank.exceptions.InsufficientBalanceException.class)
-	public void insufficientBalanceTransfer() throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException {
+	public void insufficientBalanceTransfer() throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException, InvalidAccountCreationException {
+		setup();
+		
 		service.fundTransfer(1, 2, 200);
 	}
 	

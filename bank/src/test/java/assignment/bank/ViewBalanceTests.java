@@ -2,9 +2,6 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -14,21 +11,16 @@ import assignment.bank.service.ServiceBankImpl;
 
 public class ViewBalanceTests {
 
-	static ServiceBankImpl service = new ServiceBankImpl();
-	private static final Logger LOGGER = Logger.getLogger( ViewBalanceTests.class.getName() );
+	ServiceBankImpl service = new ServiceBankImpl();
 	
-	static
-	{
+	public void setup() throws InvalidAccountCreationException	{
 		Account account = new Account(1, 1992);
-		try {
-			service.createAccount(account);
-		} catch (InvalidAccountCreationException e) {
-			LOGGER.info(e.getMessage());
-		}
+		service.createAccount(account);
 	}
 	
 	@Test
-	public void validViewBalance() throws InvalidAccountException {
+	public void validViewBalance() throws InvalidAccountException, InvalidAccountCreationException {
+		setup();
 		assertEquals(1992, service.showBalance(1).getAccBalance(), 0.01);
 	}
 	
