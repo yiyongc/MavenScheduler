@@ -25,25 +25,34 @@ public class MoneyDepositTests {
 
 		try {
 			assertEquals(110, service.deposit(1, 10).getAccBalance(), 0.01);
-		} catch (InvalidAccountException e) {
+		} catch (InvalidAccountException | InvalidAmountException e) {
 			e.printStackTrace();
+		} 
+	}
+
+	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
+	public void invalidAccountDeposit() throws InvalidAccountException {
+		try {
+			service.deposit(1, 10);
 		} catch (InvalidAmountException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
-	public void invalidAccountDeposit() throws InvalidAccountException, InvalidAmountException {
-		service.deposit(1, 10);
-	}
-
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
-	public void invalidAmountDeposit()
-			throws InvalidAccountCreationException, InvalidAccountException, InvalidAmountException {
+	public void invalidAmountDeposit() throws InvalidAmountException {
 		Account account = new Account(1, 100);
-		service.createAccount(account);
+		try {
+			service.createAccount(account);
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		service.deposit(1, -3);
+		try {
+			service.deposit(1, -3);
+		} catch (InvalidAccountException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

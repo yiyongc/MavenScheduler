@@ -23,36 +23,59 @@ public class MoneyTransferTests {
 	}
 
 	@Test
-	public void validTransfer() throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException,
-			InvalidAccountCreationException {
-		setup();
+	public void validTransfer() {
+		try {
+			setup();
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		assertEquals(90, service.fundTransfer(1, 2, 10).getAccBalance(), 0.01);
+		try {
+			assertEquals(90, service.fundTransfer(1, 2, 10).getAccBalance(), 0.01);
+		} catch (InvalidAccountException | InsufficientBalanceException | InvalidAmountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InsufficientBalanceException.class)
-	public void insufficientBalanceTransfer() throws InvalidAccountException, InsufficientBalanceException,
-			InvalidAmountException, InvalidAccountCreationException {
-		setup();
+	public void insufficientBalanceTransfer() throws InsufficientBalanceException {
+		try {
+			setup();
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		service.fundTransfer(1, 2, 200);
+		try {
+			service.fundTransfer(1, 2, 200);
+		} catch (InvalidAccountException | InvalidAmountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
-	public void invalidAccountTransfer()
-			throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException {
-		service.fundTransfer(1, 3, 10);
+	public void invalidAccountTransfer() throws InvalidAccountException {
+		try {
+			service.fundTransfer(1, 3, 10);
+		} catch (InsufficientBalanceException | InvalidAmountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
-	public void invalidAccountTransfer2()
-			throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException {
-		service.fundTransfer(3, 2, 10);
+	public void invalidAccountTransfer2() throws InvalidAccountException {
+		try {
+			service.fundTransfer(3, 2, 10);
+		} catch (InsufficientBalanceException | InvalidAmountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
-	public void invalidAmountTransfer()
-			throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException {
-		service.fundTransfer(1, 2, -10);
+	public void invalidAmountTransfer()	throws InvalidAmountException {
+		try {
+			service.fundTransfer(1, 2, -10);
+		} catch (InvalidAccountException | InsufficientBalanceException e) {
+			e.printStackTrace();
+		}
 	}
 }
