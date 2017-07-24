@@ -75,10 +75,10 @@ public class ServiceBankImpl implements IServiceBank {
 		Account account = accountRepo.findOne(accNum);
 
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-			Date fromDate = sdf.parse(dateFrom);
-			Date toDate = sdf.parse(dateTo);
-
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			Date fromDate = sdf.parse(dateFrom + " 00:00:00");
+			Date toDate = sdf.parse(dateTo + " 23:59:59");
+			
 			if (fromDate.after(toDate))
 				throw new IncorrectDateRangeException(fromDate, toDate);
 
