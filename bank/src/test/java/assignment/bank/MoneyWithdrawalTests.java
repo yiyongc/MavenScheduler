@@ -27,40 +27,70 @@ public class MoneyWithdrawalTests {
 	}
 
 	@Test
-	public void validWithdrawal() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException,
-			WithdrawLimitException, InvalidAccountCreationException, ParseException {
-		setup();
+	public void validWithdrawal() {
+		try {
+			setup();
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		assertEquals(400, service.withdraw(1, 100).getAccBalance(), 0.01);
+		try {
+			assertEquals(400, service.withdraw(1, 100).getAccBalance(), 0.01);
+		} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException
+				| WithdrawLimitException | ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Test(expected = assignment.bank.exceptions.InsufficientBalanceException.class)
-	public void insufficientBalanceForWithdrawal() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException, ParseException {
-		setup();
+	@Test (expected = assignment.bank.exceptions.InsufficientBalanceException.class)
+	public void insufficientBalanceForWithdrawal() throws InsufficientBalanceException {
+		try {
+			setup();
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		service.withdraw(1, 1000);
+		try {
+			service.withdraw(1, 1000);
+		} catch (InvalidAccountException | InvalidAmountException | WithdrawLimitException | ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.WithdrawLimitException.class)
-	public void withdrawLimitExceeded() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException, ParseException {
-		setup();
+	public void withdrawLimitExceeded() throws WithdrawLimitException {
+		try {
+			setup();
+		} catch (InvalidAccountCreationException e) {
 
-		service.withdraw(2, 500);
-		service.withdraw(2, 500);
-		service.withdraw(2, 1);
+			e.printStackTrace();
+		}
+
+		try {
+			service.withdraw(2, 500);
+			service.withdraw(2, 500);
+			service.withdraw(2, 1);
+		} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException | ParseException e) {
+	
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
-	public void invalidAccountWithdrawal() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException, ParseException {
-		service.withdraw(3, 10);
+	public void invalidAccountWithdrawal() throws InvalidAccountException {
+		try {
+			service.withdraw(3, 10);
+		} catch (InsufficientBalanceException | InvalidAmountException | WithdrawLimitException | ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
-	public void invalidAmountWithdrawal() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException, ParseException {
-		service.withdraw(1, -10);
+	public void invalidAmountWithdrawal() throws InvalidAmountException {
+		try {
+			service.withdraw(1, -10);
+		} catch (InsufficientBalanceException | InvalidAccountException | WithdrawLimitException | ParseException e) {
+			e.printStackTrace();
+		}
 	}
 }

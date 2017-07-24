@@ -26,22 +26,38 @@ public class ViewTransactionsTests {
 	ServiceBankImpl service = new ServiceBankImpl();
 
 	@Test
-	public void viewLastTenTransactions() throws InvalidAccountException, InvalidAmountException,
-			InsufficientBalanceException, WithdrawLimitException, InvalidAccountCreationException, ParseException {
+	public void viewLastTenTransactions() {
 		Account account = new Account(1, 1992);
-		service.createAccount(account);
+		try {
+			service.createAccount(account);
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
 		// 5 deposits, 6 withdrawals
 		for (int i = 0; i < 5; i++)
-			service.deposit(1, 10);
+			try {
+				service.deposit(1, 10);
+			} catch (InvalidAccountException | InvalidAmountException e) {
+				e.printStackTrace();
+			}
 		for (int j = 0; j < 6; j++)
-			service.withdraw(1, 5);
+			try {
+				service.withdraw(1, 5);
+			} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException
+					| WithdrawLimitException | ParseException e) {
+				e.printStackTrace();
+			}
 
 		@SuppressWarnings("unchecked")
 		List<Transaction> dummy = (ArrayList<Transaction>) account.getTransactions();
 		dummy.remove(10);
 
-		assertEquals(dummy, service.printTransactions(1));
+		try {
+			assertEquals(dummy, service.printTransactions(1));
+		} catch (InvalidAccountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
@@ -50,44 +66,70 @@ public class ViewTransactionsTests {
 	}
 
 	@Test
-	public void viewDateRangeTransactions() throws InvalidAccountCreationException, InvalidAccountException,
-			InvalidAmountException, IncorrectDateRangeException {
+	public void viewDateRangeTransactions() {
 		Calendar c = Calendar.getInstance();
 		c.set(2017, 0, 10);
 		Date myDate = c.getTime();
 		Transaction dummyTransaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), myDate, 0,
 				"Dummy transaction", 100);
 		Account account = new Account(1, 1992);
-		service.createAccount(account);
+		try {
+			service.createAccount(account);
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 		account.addTransaction(dummyTransaction);
 
 		for (int i = 0; i < 10; i++)
-			service.deposit(1, 10);
+			try {
+				service.deposit(1, 10);
+			} catch (InvalidAccountException | InvalidAmountException e) {
+				e.printStackTrace();
+			}
 
 		List<Transaction> resultantSearch = new ArrayList<>();
 		resultantSearch.add(dummyTransaction);
 
-		assertEquals(resultantSearch, service.printTransactions(1, "2017/1/10", "2017/2/10"));
+		try {
+			assertEquals(resultantSearch, service.printTransactions(1, "2017/1/10", "2017/2/10"));
+		} catch (IncorrectDateRangeException | InvalidAccountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.IncorrectDateRangeException.class)
-	public void invalidDateRangeTransactions()
-			throws IncorrectDateRangeException, InvalidAccountException, InvalidAccountCreationException {
+	public void invalidDateRangeTransactions() throws IncorrectDateRangeException {
 		Account account = new Account(1, 1992);
-		service.createAccount(account);
+		try {
+			service.createAccount(account);
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		service.printTransactions(1, "2017/7/10", "2017/6/10");
+		try {
+			service.printTransactions(1, "2017/7/10", "2017/6/10");
+		} catch (InvalidAccountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
-	public void noTransactionHistory()
-			throws InvalidAccountException, IncorrectDateRangeException, InvalidAccountCreationException {
+	public void noTransactionHistory() {
 		List<Transaction> emptyHistory = new ArrayList<>();
 		Account account = new Account(1, 1992);
-		service.createAccount(account);
+		try {
+			service.createAccount(account);
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		assertEquals(emptyHistory, service.printTransactions(1));
-		assertEquals(emptyHistory, service.printTransactions(1, "2017/5/5", "2017/5/5"));
+		try {
+			assertEquals(emptyHistory, service.printTransactions(1));
+			assertEquals(emptyHistory, service.printTransactions(1, "2017/5/5", "2017/5/5"));
+		} catch (InvalidAccountException | IncorrectDateRangeException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

@@ -19,9 +19,18 @@ public class ViewBalanceTests {
 	}
 
 	@Test
-	public void validViewBalance() throws InvalidAccountException, InvalidAccountCreationException {
-		setup();
-		assertEquals(1992, service.showBalance(1).getAccBalance(), 0.01);
+	public void validViewBalance() {
+		try {
+			setup();
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			assertEquals(1992, service.showBalance(1).getAccBalance(), 0.01);
+		} catch (InvalidAccountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
