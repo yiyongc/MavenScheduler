@@ -20,6 +20,7 @@ public class MainApplication {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private static ISchedulerService setupService() {
 		IGameRepo gameRepo = new GameRepoImpl();
 		IDayRepo dayRepo = new DayRepoImpl();
