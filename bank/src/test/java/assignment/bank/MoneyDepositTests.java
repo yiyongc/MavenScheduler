@@ -15,11 +15,21 @@ public class MoneyDepositTests {
 	ServiceBankImpl service = new ServiceBankImpl();
 
 	@Test
-	public void validDeposit() throws InvalidAccountCreationException, InvalidAccountException, InvalidAmountException {
+	public void validDeposit() {
 		Account validAccount = new Account(1, 100);
-		service.createAccount(validAccount);
+		try {
+			service.createAccount(validAccount);
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 
-		assertEquals(110, service.deposit(1, 10).getAccBalance(), 0.01);
+		try {
+			assertEquals(110, service.deposit(1, 10).getAccBalance(), 0.01);
+		} catch (InvalidAccountException e) {
+			e.printStackTrace();
+		} catch (InvalidAmountException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)

@@ -13,10 +13,14 @@ public class AccountCreationTests {
 	ServiceBankImpl service = new ServiceBankImpl();
 
 	@Test
-	public void createValidAccount() throws InvalidAccountCreationException {
+	public void createValidAccount()  {
 		Account validAccount = new Account(1, 100);
-
-		assertEquals("Account successfully created.", service.createAccount(validAccount));
+		
+		try {
+			assertEquals("Account successfully created.", service.createAccount(validAccount));
+		} catch (InvalidAccountCreationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountCreationException.class)

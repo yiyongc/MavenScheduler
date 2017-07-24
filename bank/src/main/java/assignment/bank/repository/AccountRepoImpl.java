@@ -1,5 +1,7 @@
 package assignment.bank.repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,7 +64,7 @@ public class AccountRepoImpl implements IAccountRepo {
 	}
 
 	public Account withdraw(int accNum, double amount)
-			throws WithdrawLimitException, InsufficientBalanceException, InvalidAccountException {
+			throws WithdrawLimitException, InsufficientBalanceException, InvalidAccountException, ParseException {
 		Account accountFound = null;
 
 		for (Account account : accounts) {
@@ -92,15 +94,20 @@ public class AccountRepoImpl implements IAccountRepo {
 		}
 	}
 
-	private boolean withdrawLimitReached(Account acc, double amount) {
-		Date currDate = new Date();
+	private boolean withdrawLimitReached(Account acc, double amount) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startOfDay = sdf.parse(sdf.format(new Date()));
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date endOfDay = sdf2.parse(sdf.format(new Date()) + " 23:59:59");
+
 		double total = 0;
 
 		@SuppressWarnings("unchecked")
 		ArrayList<Transaction> transactionHistory = (ArrayList<Transaction>) acc.getTransactions();
 
 		for (Transaction transaction : transactionHistory) {
-			if (transaction.getDate().equals(currDate)) {
+			Date transDate = transaction.getDate();
+			if (transDate.equals(startOfDay) || transDate.equals(endOfDay) || (transDate.before(endOfDay) && transDate.after(startOfDay))) {
 				double amt = transaction.getAmount();
 				if (amt < 0) // negative is withdrawal
 					total += amt;

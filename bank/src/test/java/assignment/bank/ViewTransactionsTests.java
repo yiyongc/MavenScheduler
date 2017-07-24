@@ -2,6 +2,7 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +27,7 @@ public class ViewTransactionsTests {
 
 	@Test
 	public void viewLastTenTransactions() throws InvalidAccountException, InvalidAmountException,
-			InsufficientBalanceException, WithdrawLimitException, InvalidAccountCreationException {
+			InsufficientBalanceException, WithdrawLimitException, InvalidAccountCreationException, ParseException {
 		Account account = new Account(1, 1992);
 		service.createAccount(account);
 

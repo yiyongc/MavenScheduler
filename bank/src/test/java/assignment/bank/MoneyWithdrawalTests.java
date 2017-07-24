@@ -2,6 +2,7 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -27,7 +28,7 @@ public class MoneyWithdrawalTests {
 
 	@Test
 	public void validWithdrawal() throws InsufficientBalanceException, InvalidAccountException, InvalidAmountException,
-			WithdrawLimitException, InvalidAccountCreationException {
+			WithdrawLimitException, InvalidAccountCreationException, ParseException {
 		setup();
 
 		assertEquals(400, service.withdraw(1, 100).getAccBalance(), 0.01);
@@ -35,7 +36,7 @@ public class MoneyWithdrawalTests {
 
 	@Test(expected = assignment.bank.exceptions.InsufficientBalanceException.class)
 	public void insufficientBalanceForWithdrawal() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException {
+			InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException, ParseException {
 		setup();
 
 		service.withdraw(1, 1000);
@@ -43,7 +44,7 @@ public class MoneyWithdrawalTests {
 
 	@Test(expected = assignment.bank.exceptions.WithdrawLimitException.class)
 	public void withdrawLimitExceeded() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException {
+			InvalidAmountException, WithdrawLimitException, InvalidAccountCreationException, ParseException {
 		setup();
 
 		service.withdraw(2, 500);
@@ -53,13 +54,13 @@ public class MoneyWithdrawalTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountWithdrawal() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException {
+			InvalidAmountException, WithdrawLimitException, ParseException {
 		service.withdraw(3, 10);
 	}
 
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
 	public void invalidAmountWithdrawal() throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException {
+			InvalidAmountException, WithdrawLimitException, ParseException {
 		service.withdraw(1, -10);
 	}
 }

@@ -1,5 +1,6 @@
 package assignment.bank.repository;
 
+import java.text.ParseException;
 import java.util.List;
 
 import assignment.bank.beans.Account;
@@ -20,7 +21,7 @@ public interface IAccountRepo {
 	public Account deposit(int accNum, double amount) throws InvalidAccountException;
 
 	public Account withdraw(int accNum, double amount)
-			throws InsufficientBalanceException, InvalidAccountException, WithdrawLimitException;
+			throws InsufficientBalanceException, InvalidAccountException, WithdrawLimitException, ParseException;
 
 	public Account fundTransfer(int fromAcc, int toAcc, double amount)
 			throws InvalidAccountException, InsufficientBalanceException;

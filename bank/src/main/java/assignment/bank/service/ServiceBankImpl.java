@@ -47,7 +47,7 @@ public class ServiceBankImpl implements IServiceBank {
 	}
 
 	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException {
+			InvalidAmountException, WithdrawLimitException, ParseException {
 		if (accNum <= 0)
 			throw new InvalidAccountException();
 		if (amount <= 0)

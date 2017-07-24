@@ -1,5 +1,6 @@
 package assignment.bank.service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import assignment.bank.beans.Account;
@@ -20,7 +21,7 @@ public interface IServiceBank {
 			throws InvalidAccountException, InsufficientBalanceException, InvalidAmountException;
 
 	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException,
-			InvalidAmountException, WithdrawLimitException;
+			InvalidAmountException, WithdrawLimitException, ParseException;
 
 	public Account deposit(int accNum, double amount) throws InvalidAccountException, InvalidAmountException;
 
