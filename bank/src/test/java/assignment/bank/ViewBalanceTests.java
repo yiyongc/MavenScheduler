@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -22,6 +23,7 @@ public class ViewBalanceTests {
 	
 	Logger logger = Logger.getLogger("View Balance Test");
 	
+	@Before
 	public void setup() {
 		try {
 			account = service.createAccount(new Customer("Tom"), 1992);
@@ -32,8 +34,6 @@ public class ViewBalanceTests {
 
 	@Test
 	public void validViewBalance() {
-		setup();
-		
 		try {
 			assertEquals(1992, service.showBalance(account.getAccNumber()).getAccBalance(), 0.01);
 		} catch (InvalidAccountException e) {
@@ -43,7 +43,7 @@ public class ViewBalanceTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountView() throws InvalidAccountException {
-		service.showBalance(1);
+		service.showBalance(999);
 	}
 
 }

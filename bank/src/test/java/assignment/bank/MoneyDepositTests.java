@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -22,6 +23,7 @@ public class MoneyDepositTests {
 	
 	Logger logger = Logger.getLogger("Money Deposit Test");
 	
+	@Before
 	public void setup() {
 		try {
 			account = service.createAccount(new Customer("Tom"), 100);
@@ -32,8 +34,6 @@ public class MoneyDepositTests {
 	
 	@Test
 	public void validDeposit() {
-		setup();
-
 		try {
 			assertEquals(110, service.deposit(account.getAccNumber(), 10).getAccBalance(), 0.01);
 		} catch (InvalidAccountException | InvalidAmountException e) {
@@ -44,7 +44,7 @@ public class MoneyDepositTests {
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountDeposit() throws InvalidAccountException {
 		try {
-			service.deposit(1, 10);
+			service.deposit(999, 10);
 		} catch (InvalidAmountException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
@@ -52,8 +52,6 @@ public class MoneyDepositTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
 	public void invalidAmountDeposit() throws InvalidAmountException {
-		setup();
-
 		try {
 			service.deposit(account.getAccNumber(), -3);
 		} catch (InvalidAccountException e) {

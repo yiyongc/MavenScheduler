@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -33,6 +34,7 @@ public class ViewTransactionsTests {
 	
 	Logger logger = Logger.getLogger("View Transactions Test");
 
+	@Before
 	public void setup() {
 		try {
 			account = service.createAccount(new Customer("Tom"), 1992);
@@ -43,8 +45,6 @@ public class ViewTransactionsTests {
 	
 	@Test
 	public void viewLastTenTransactions() {
-		setup();
-
 		// 5 deposits, 6 withdrawals
 		for (int i = 0; i < 5; i++)
 			try {
@@ -72,7 +72,7 @@ public class ViewTransactionsTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountTransactions() throws InvalidAccountException {
-		service.printTransactions(2);
+		service.printTransactions(999);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class ViewTransactionsTests {
 		Date myDate = c.getTime();
 		Transaction dummyTransaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), myDate, 0,
 				"Dummy transaction", 100);
-		setup();
+
 		account.addTransaction(dummyTransaction);
 
 		for (int i = 0; i < 10; i++)
@@ -104,8 +104,6 @@ public class ViewTransactionsTests {
 
 	@Test(expected = assignment.bank.exceptions.IncorrectDateRangeException.class)
 	public void invalidDateRangeTransactions() throws IncorrectDateRangeException {
-		setup();
-
 		try {
 			service.printTransactions(account.getAccNumber(), "2017/7/10", "2017/6/10");
 		} catch (InvalidAccountException e) {
@@ -116,8 +114,7 @@ public class ViewTransactionsTests {
 	@Test
 	public void noTransactionHistory() {
 		List<Transaction> emptyHistory = new ArrayList<>();
-		setup();
-
+		
 		try {
 			assertEquals(emptyHistory, service.printTransactions(account.getAccNumber()));
 			assertEquals(emptyHistory, service.printTransactions(account.getAccNumber(), "2017/5/5", "2017/5/5"));

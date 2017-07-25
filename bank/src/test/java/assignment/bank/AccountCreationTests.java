@@ -19,7 +19,6 @@ public class AccountCreationTests {
 	
 	@Test
 	public void createValidAccount()  {
-		
 		try {
 			assertEquals(100, service.createAccount(new Customer("Tom"), 100).getAccBalance(), 0.01);
 		} catch (InvalidAccountCreationException e) {

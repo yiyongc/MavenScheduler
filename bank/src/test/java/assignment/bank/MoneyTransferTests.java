@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -24,6 +25,7 @@ public class MoneyTransferTests {
 	
 	Logger logger = Logger.getLogger("Money Transfer Test");
 	
+	@Before
 	public void setupAccounts() {
 		try {
 			acc1 = service.createAccount(new Customer("Tom"), 100);
@@ -35,8 +37,6 @@ public class MoneyTransferTests {
 	
 	@Test
 	public void validTransfer() {
-		setupAccounts();
-		
 		try {
 			assertEquals(90, service.fundTransfer(acc1.getAccNumber(), acc2.getAccNumber(), 10).getAccBalance(), 0.01);
 		} catch (InvalidAccountException | InsufficientBalanceException | InvalidAmountException e) {
@@ -46,8 +46,6 @@ public class MoneyTransferTests {
 
 	@Test(expected = assignment.bank.exceptions.InsufficientBalanceException.class)
 	public void insufficientBalanceTransfer() throws InsufficientBalanceException {
-		setupAccounts();
-		
 		try {
 			service.fundTransfer(acc1.getAccNumber(), acc2.getAccNumber(), 200);
 		} catch (InvalidAccountException | InvalidAmountException e) {
@@ -57,8 +55,6 @@ public class MoneyTransferTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountTransfer() throws InvalidAccountException {
-		setupAccounts();
-		
 		try {
 			service.fundTransfer(acc1.getAccNumber(), 999, 10);
 		} catch (InsufficientBalanceException | InvalidAmountException e) {
@@ -68,8 +64,6 @@ public class MoneyTransferTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountTransfer2() throws InvalidAccountException {
-		setupAccounts();
-		
 		try {
 			service.fundTransfer(999, acc2.getAccNumber(), 10);
 		} catch (InsufficientBalanceException | InvalidAmountException e) {
@@ -79,8 +73,6 @@ public class MoneyTransferTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
 	public void invalidAmountTransfer()	throws InvalidAmountException {
-		setupAccounts();
-		
 		try {
 			service.fundTransfer(acc1.getAccNumber(), acc2.getAccNumber(), -10);
 		} catch ( InsufficientBalanceException | InvalidAccountException e) {

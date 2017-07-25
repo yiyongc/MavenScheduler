@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -27,6 +28,7 @@ public class MoneyWithdrawalTests {
 	
 	Logger logger = Logger.getLogger("Money Withdrawal Test");
 	
+	@Before
 	public void setup() {
 		try {
 			normalAccount = service.createAccount(new Customer("Tom"), 500);
@@ -38,8 +40,6 @@ public class MoneyWithdrawalTests {
 
 	@Test
 	public void validWithdrawal() {
-		setup();
-
 		try {
 			assertEquals(400, service.withdraw(normalAccount.getAccNumber(), 100).getAccBalance(), 0.01);
 		} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException
@@ -50,8 +50,6 @@ public class MoneyWithdrawalTests {
 
 	@Test (expected = assignment.bank.exceptions.InsufficientBalanceException.class)
 	public void insufficientBalanceForWithdrawal() throws InsufficientBalanceException {
-		setup();
-
 		try {
 			service.withdraw(normalAccount.getAccNumber(), 1000);
 		} catch (InvalidAccountException | InvalidAmountException | WithdrawLimitException | ParseException e) {
@@ -61,8 +59,6 @@ public class MoneyWithdrawalTests {
 
 	@Test(expected = assignment.bank.exceptions.WithdrawLimitException.class)
 	public void withdrawLimitExceeded() throws WithdrawLimitException {
-		setup();
-
 		try {
 			service.withdraw(richAccount.getAccNumber(), 500);
 			service.withdraw(richAccount.getAccNumber(), 500);
@@ -83,8 +79,6 @@ public class MoneyWithdrawalTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAmountException.class)
 	public void invalidAmountWithdrawal() throws InvalidAmountException {
-		setup();
-		
 		try {
 			service.withdraw(normalAccount.getAccNumber(), -10);
 		} catch (InsufficientBalanceException | InvalidAccountException | WithdrawLimitException | ParseException e) {
