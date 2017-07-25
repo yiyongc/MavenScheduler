@@ -29,11 +29,13 @@ import assignment.bank.utility.UniqueNumberGenerator;
 
 public class ViewTransactionsTests {
 
+	
 	IServiceBank service = new ServiceBankImpl(new AccountRepoImpl());
-	Account account = null;
 	
 	Logger logger = Logger.getLogger("View Transactions Test");
-
+	
+	Account account = null;
+	
 	@Before
 	public void setup() {
 		try {
@@ -88,7 +90,7 @@ public class ViewTransactionsTests {
 				logger.log(Level.FINE, e.getMessage(), e);
 			}
 	
-		List<Transaction> transArray = ((ArrayList<Transaction>) account.getTransactions());
+		List<Transaction> transArray = (ArrayList<Transaction>) account.getTransactions();
 
 		try {
 			assertEquals(transArray, service.printTransactions(account.getAccNumber()));

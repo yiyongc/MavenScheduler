@@ -18,15 +18,15 @@ import assignment.bank.service.ServiceBankImpl;
 
 public class ViewBalanceTests {
 
+	Logger logger = Logger.getLogger("View Balance Test");
+	
 	IServiceBank service = new ServiceBankImpl(new AccountRepoImpl());
 	Account account = null;
-	
-	Logger logger = Logger.getLogger("View Balance Test");
 	
 	@Before
 	public void setup() {
 		try {
-			account = service.createAccount(new Customer("Tom"), 1992);
+			account = service.createAccount(new Customer("Harry"), 1992);
 		} catch (InvalidAccountCreationException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
