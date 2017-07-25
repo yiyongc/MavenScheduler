@@ -61,10 +61,11 @@ public class ViewTransactionsTests {
 				logger.log(Level.FINE, e.getMessage(), e);
 			}
 
-		Object dummyArray = ((ArrayList<Transaction>) account.getTransactions()).clone();
+		
+		Object clonedArray = ((ArrayList<Transaction>) account.getTransactions()).clone();
 		
 		@SuppressWarnings("unchecked")
-		ArrayList<Transaction> clone = (ArrayList<Transaction>) dummyArray;
+		List<Transaction> clone = (ArrayList<Transaction>) clonedArray;
 		
 		clone.remove(0);
 
