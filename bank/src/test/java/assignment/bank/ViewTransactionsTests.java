@@ -43,6 +43,7 @@ public class ViewTransactionsTests {
 		}
 	}
 	
+	
 	@Test
 	public void viewLastTenTransactions() {
 		// 5 deposits, 6 withdrawals
@@ -60,15 +61,42 @@ public class ViewTransactionsTests {
 				logger.log(Level.FINE, e.getMessage(), e);
 			}
 
-		List<Transaction> dummy = (ArrayList<Transaction>) account.getTransactions();
-		dummy.remove(10);
+		Object dummyArray = ((ArrayList<Transaction>) account.getTransactions()).clone();
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<Transaction> clone = (ArrayList<Transaction>) dummyArray;
+		
+		clone.remove(0);
 
 		try {
-			assertEquals(dummy, service.printTransactions(account.getAccNumber()));
+			assertEquals(clone, service.printTransactions(account.getAccNumber()));
+			assertEquals(10, service.printTransactions(account.getAccNumber()).size());
 		} catch (InvalidAccountException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
+	
+	
+	@Test
+	public void viewLessThanTenTransactions() {
+		// 5 withdrawals
+		for (int i = 0; i < 5; i++)
+			try {
+				service.withdraw(account.getAccNumber(), 10);
+			} catch (InvalidAccountException | InvalidAmountException | InsufficientBalanceException | WithdrawLimitException | ParseException e) {
+				logger.log(Level.FINE, e.getMessage(), e);
+			}
+	
+		List<Transaction> transArray = ((ArrayList<Transaction>) account.getTransactions());
+
+		try {
+			assertEquals(transArray, service.printTransactions(account.getAccNumber()));
+			assertEquals(5, service.printTransactions(account.getAccNumber()).size());
+		} catch (InvalidAccountException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
+		}
+	}
+	
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountException.class)
 	public void invalidAccountTransactions() throws InvalidAccountException {

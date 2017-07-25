@@ -95,20 +95,25 @@ Then  : System should display last ten transactions for the account
 
 20)
 Given : User attempts to view transaction history
+When  : He enters valid account number but account has less than 10 transactions
+Then  : System should display all the transactions for the account
+
+21)
+Given : User attempts to view transaction history
 When  : He enters invalid account number
 Then  : System should throw InvalidAccountException
 
-21)
+22)
 Given : User attempts to view transaction history
 When  : He enters valid account number and date range
 Then  : System should display the transactions within the date range inclusive
 
-22)
+23)
 Given : User attempts to view transaction history
 When  : He enters valid account number but incorrect date range
 Then  : System should throw IncorrectDateRangeException
 
-23)
+24)
 Given : User attempts to view transaction history
 When  : He enters valid account number and date range but has no transaction history
 Then  : System should display a message to show that the account has no transactions
