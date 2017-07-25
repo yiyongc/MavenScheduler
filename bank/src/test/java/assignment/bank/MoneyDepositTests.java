@@ -52,6 +52,7 @@ public class MoneyDepositTests {
 			service.deposit(1, -3);
 		} catch (InvalidAccountException e) {
 			e.printStackTrace();
+			//Need to log here for no code smells
 		}
 	}
 
