@@ -2,6 +2,9 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -19,12 +22,14 @@ public class MoneyTransferTests {
 	Account acc1 = null;
 	Account acc2 = null;
 	
+	Logger logger = Logger.getLogger("Money Transfer Test");
+	
 	public void setupAccounts() {
 		try {
 			acc1 = service.createAccount(new Customer("Tom"), 100);
 			acc2 = service.createAccount(new Customer("Harry"), 100);
-		} catch (InvalidAccountCreationException e1) {
-			e1.printStackTrace();
+		} catch (InvalidAccountCreationException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 	
@@ -35,7 +40,7 @@ public class MoneyTransferTests {
 		try {
 			assertEquals(90, service.fundTransfer(acc1.getAccNumber(), acc2.getAccNumber(), 10).getAccBalance(), 0.01);
 		} catch (InvalidAccountException | InsufficientBalanceException | InvalidAmountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -46,7 +51,7 @@ public class MoneyTransferTests {
 		try {
 			service.fundTransfer(acc1.getAccNumber(), acc2.getAccNumber(), 200);
 		} catch (InvalidAccountException | InvalidAmountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -57,7 +62,7 @@ public class MoneyTransferTests {
 		try {
 			service.fundTransfer(acc1.getAccNumber(), 999, 10);
 		} catch (InsufficientBalanceException | InvalidAmountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -68,7 +73,7 @@ public class MoneyTransferTests {
 		try {
 			service.fundTransfer(999, acc2.getAccNumber(), 10);
 		} catch (InsufficientBalanceException | InvalidAmountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -79,7 +84,7 @@ public class MoneyTransferTests {
 		try {
 			service.fundTransfer(acc1.getAccNumber(), acc2.getAccNumber(), -10);
 		} catch ( InsufficientBalanceException | InvalidAccountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 }

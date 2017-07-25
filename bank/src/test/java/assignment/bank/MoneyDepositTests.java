@@ -2,6 +2,9 @@ package assignment.bank;
 
 import static org.junit.Assert.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -17,11 +20,13 @@ public class MoneyDepositTests {
 	ServiceBankImpl service = new ServiceBankImpl(new AccountRepoImpl());
 	Account account = null;
 	
+	Logger logger = Logger.getLogger("Money Deposit Test");
+	
 	public void setup() {
 		try {
 			account = service.createAccount(new Customer("Tom"), 100);
 		} catch (InvalidAccountCreationException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 	
@@ -32,7 +37,7 @@ public class MoneyDepositTests {
 		try {
 			assertEquals(110, service.deposit(account.getAccNumber(), 10).getAccBalance(), 0.01);
 		} catch (InvalidAccountException | InvalidAmountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		} 
 	}
 
@@ -41,7 +46,7 @@ public class MoneyDepositTests {
 		try {
 			service.deposit(1, 10);
 		} catch (InvalidAmountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -52,8 +57,7 @@ public class MoneyDepositTests {
 		try {
 			service.deposit(account.getAccNumber(), -3);
 		} catch (InvalidAccountException e) {
-			e.printStackTrace();
-			//Need to log here 
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 

@@ -3,6 +3,9 @@ package assignment.bank;
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.Test;
 
 import assignment.bank.beans.Account;
@@ -22,12 +25,14 @@ public class MoneyWithdrawalTests {
 	Account normalAccount = null;
 	Account richAccount = null;
 	
+	Logger logger = Logger.getLogger("Money Withdrawal Test");
+	
 	public void setup() {
 		try {
 			normalAccount = service.createAccount(new Customer("Tom"), 500);
 			richAccount = service.createAccount(new Customer("Harry"), 2000);
 		} catch (InvalidAccountCreationException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -39,7 +44,7 @@ public class MoneyWithdrawalTests {
 			assertEquals(400, service.withdraw(normalAccount.getAccNumber(), 100).getAccBalance(), 0.01);
 		} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException
 				| WithdrawLimitException | ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -50,7 +55,7 @@ public class MoneyWithdrawalTests {
 		try {
 			service.withdraw(normalAccount.getAccNumber(), 1000);
 		} catch (InvalidAccountException | InvalidAmountException | WithdrawLimitException | ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -63,7 +68,7 @@ public class MoneyWithdrawalTests {
 			service.withdraw(richAccount.getAccNumber(), 500);
 			service.withdraw(richAccount.getAccNumber(), 1);
 		} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException | ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -72,7 +77,7 @@ public class MoneyWithdrawalTests {
 		try {
 			service.withdraw(999, 10);
 		} catch (InsufficientBalanceException | InvalidAmountException | WithdrawLimitException | ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -83,7 +88,7 @@ public class MoneyWithdrawalTests {
 		try {
 			service.withdraw(normalAccount.getAccNumber(), -10);
 		} catch (InsufficientBalanceException | InvalidAccountException | WithdrawLimitException | ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 }

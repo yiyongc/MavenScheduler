@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 
@@ -28,12 +30,14 @@ public class ViewTransactionsTests {
 
 	IServiceBank service = new ServiceBankImpl(new AccountRepoImpl());
 	Account account = null;
+	
+	Logger logger = Logger.getLogger("View Transactions Test");
 
 	public void setup() {
 		try {
 			account = service.createAccount(new Customer("Tom"), 1992);
 		} catch (InvalidAccountCreationException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 	
@@ -46,14 +50,14 @@ public class ViewTransactionsTests {
 			try {
 				service.deposit(account.getAccNumber(), 10);
 			} catch (InvalidAccountException | InvalidAmountException e) {
-				e.printStackTrace();
+				logger.log(Level.FINE, e.getMessage(), e);
 			}
 		for (int j = 0; j < 6; j++)
 			try {
 				service.withdraw(account.getAccNumber(), 5);
 			} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException
 					| WithdrawLimitException | ParseException e) {
-				e.printStackTrace();
+				logger.log(Level.FINE, e.getMessage(), e);
 			}
 
 		List<Transaction> dummy = (ArrayList<Transaction>) account.getTransactions();
@@ -62,7 +66,7 @@ public class ViewTransactionsTests {
 		try {
 			assertEquals(dummy, service.printTransactions(account.getAccNumber()));
 		} catch (InvalidAccountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -85,7 +89,7 @@ public class ViewTransactionsTests {
 			try {
 				service.deposit(account.getAccNumber(), 10);
 			} catch (InvalidAccountException | InvalidAmountException e) {
-				e.printStackTrace();
+				logger.log(Level.FINE, e.getMessage(), e);
 			}
 
 		List<Transaction> resultantSearch = new ArrayList<>();
@@ -94,7 +98,7 @@ public class ViewTransactionsTests {
 		try {
 			assertEquals(resultantSearch, service.printTransactions(account.getAccNumber(), "2017/1/10", "2017/2/10"));
 		} catch (IncorrectDateRangeException | InvalidAccountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -105,7 +109,7 @@ public class ViewTransactionsTests {
 		try {
 			service.printTransactions(account.getAccNumber(), "2017/7/10", "2017/6/10");
 		} catch (InvalidAccountException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 
@@ -118,7 +122,7 @@ public class ViewTransactionsTests {
 			assertEquals(emptyHistory, service.printTransactions(account.getAccNumber()));
 			assertEquals(emptyHistory, service.printTransactions(account.getAccNumber(), "2017/5/5", "2017/5/5"));
 		} catch (InvalidAccountException | IncorrectDateRangeException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 		
 	}
