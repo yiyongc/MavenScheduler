@@ -6,12 +6,14 @@ import java.util.Objects;
 
 public class Account {
 
+	private Customer cust;
 	private int accNumber;
 	private double accBalance;
 	private List<Transaction> transactionHistory;
 
-	public Account(int accNumber, double balance) {
+	public Account(int accNumber, Customer cust, double balance) {
 		this.accNumber = accNumber;
+		this.cust = cust;
 		this.accBalance = balance;
 		this.transactionHistory = new ArrayList<>();
 	}
@@ -24,12 +26,15 @@ public class Account {
 		return accBalance;
 	}
 
+	public Customer getCustomer() {
+		return cust;
+	}
+	
 	public void setAccBalance(double newBalance) {
 		this.accBalance = newBalance;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List getTransactions() {
+	public List<Transaction> getTransactions() {
 		return transactionHistory;
 	}
 

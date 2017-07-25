@@ -4,20 +4,20 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import assignment.bank.beans.Account;
+import assignment.bank.beans.Customer;
 import assignment.bank.exceptions.InvalidAccountCreationException;
+import assignment.bank.repository.AccountRepoImpl;
 import assignment.bank.service.ServiceBankImpl;
 
 public class AccountCreationTests {
 
-	ServiceBankImpl service = new ServiceBankImpl();
+	ServiceBankImpl service = new ServiceBankImpl(new AccountRepoImpl());
 
 	@Test
 	public void createValidAccount()  {
-		Account validAccount = new Account(1, 100);
 		
 		try {
-			assertEquals("Account successfully created.", service.createAccount(validAccount));
+			assertEquals(100, service.createAccount(new Customer("Tom"), 100).getAccBalance(), 0.01);
 		} catch (InvalidAccountCreationException e) {
 			e.printStackTrace();
 		}
@@ -25,9 +25,12 @@ public class AccountCreationTests {
 
 	@Test(expected = assignment.bank.exceptions.InvalidAccountCreationException.class)
 	public void createInvalidAccount() throws InvalidAccountCreationException {
-		Account invalidAccount = new Account(1, 99);
-
-		service.createAccount(invalidAccount);
+		service.createAccount(new Customer("Tom"), 99);
+	}
+	
+	@Test(expected = assignment.bank.exceptions.InvalidAccountCreationException.class)
+	public void createAccountWithoutName() throws InvalidAccountCreationException {
+		service.createAccount(new Customer(""), 99);
 	}
 
 }

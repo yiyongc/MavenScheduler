@@ -10,8 +10,8 @@ public class InvalidAccountCreationException extends Exception {
 		super("Unable to create account with $" + amount + " as the minimum required amount is $100.");
 	}
 
-	public InvalidAccountCreationException(int accNum) {
-		super("Unable to create account as  account number: " + accNum + " already exists.");
+	public InvalidAccountCreationException(String name) {
+		super("Unable to create account with invalid customer name.");
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import assignment.bank.beans.Account;
+import assignment.bank.beans.Customer;
 import assignment.bank.beans.Transaction;
 import assignment.bank.exceptions.IncorrectDateRangeException;
 import assignment.bank.exceptions.InsufficientBalanceException;
@@ -14,25 +15,39 @@ import assignment.bank.exceptions.InvalidAccountCreationException;
 import assignment.bank.exceptions.InvalidAccountException;
 import assignment.bank.exceptions.InvalidAmountException;
 import assignment.bank.exceptions.WithdrawLimitException;
-import assignment.bank.repository.AccountRepoImpl;
+import assignment.bank.repository.IAccountRepo;
+import assignment.bank.utility.UniqueNumberGenerator;
 
 public class ServiceBankImpl implements IServiceBank {
 
-	private AccountRepoImpl accountRepo = new AccountRepoImpl();
+	private IAccountRepo accountRepo;
 
-	public String createAccount(Account acc) throws InvalidAccountCreationException {
+	public ServiceBankImpl(IAccountRepo accountRepo) {
+		this.accountRepo = accountRepo;
+	}
 
-		if (acc.getAccBalance() < 100)
-			throw new InvalidAccountCreationException(acc.getAccBalance());
+	public Account createAccount(Customer cust, double amount) throws InvalidAccountCreationException {
 
+		String name = cust.getName();
+		
+		//Input checking
+		if (amount < 100)
+			throw new InvalidAccountCreationException(amount);
+		if (name.trim().length() == 0)
+			throw new InvalidAccountCreationException(name);
+
+		//Create account object if amount is valid
+		Account acc = new Account(UniqueNumberGenerator.generateUniqueAccNo(), cust, amount);
+		
 		return accountRepo.addAccount(acc);
+		
 	}
 
 	public Account showBalance(int accNumber) throws InvalidAccountException {
 		if (accNumber <= 0)
 			throw new InvalidAccountException();
 
-		return accountRepo.getBalance(accNumber);
+		return accountRepo.findOne(accNumber);
 	}
 
 	public Account fundTransfer(int fromAcc, int toAcc, double amount)
@@ -43,18 +58,85 @@ public class ServiceBankImpl implements IServiceBank {
 		if (amount <= 0)
 			throw new InvalidAmountException(amount, "transfer");
 
-		return accountRepo.fundTransfer(fromAcc, toAcc, amount);
+		Account accFrom = accountRepo.findOne(fromAcc);
+		Account accTo = accountRepo.findOne(toAcc);
+		
+		if (accFrom.getAccBalance() < amount)
+			throw new InsufficientBalanceException(amount, "transfer");
+		else {
+			double newBalanceSource = accFrom.getAccBalance() - amount;
+			double newBalanceDestination = accTo.getAccBalance() + amount;
+			accFrom.setAccBalance(newBalanceSource);
+			accTo.setAccBalance(newBalanceDestination);
+
+			Date currDate = new Date();
+
+			Transaction transactionSource = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), currDate,
+					-amount, "Transfer of $" + amount + " to " + toAcc, newBalanceSource);
+
+			accFrom.addTransaction(transactionSource);
+
+			Transaction transactionDest = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), currDate,
+					amount, "Received $" + amount + " from " + fromAcc, newBalanceDestination);
+
+			accTo.addTransaction(transactionDest);
+
+			return accFrom;
+		}
+
 	}
 
 	public Account withdraw(int accNum, double amount) throws InsufficientBalanceException, InvalidAccountException,
 			InvalidAmountException, WithdrawLimitException, ParseException {
+		String withdrawStr = "withdraw";
+		
 		if (accNum <= 0)
 			throw new InvalidAccountException();
 		if (amount <= 0)
-			throw new InvalidAmountException(amount, "withdraw");
+			throw new InvalidAmountException(amount, withdrawStr);
 
-		return accountRepo.withdraw(accNum, amount);
+		Account accountFound = accountRepo.findOne(accNum);
+		
+		if (withdrawLimitReached(accountFound, amount))
+			throw new WithdrawLimitException(amount);
 
+		double newBalance = accountFound.getAccBalance() - amount;
+
+		if (newBalance < 0)
+			throw new InsufficientBalanceException(amount, withdrawStr);
+		else {
+			accountFound.setAccBalance(newBalance);
+
+			Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), new Date(),
+					-amount, "Withdrawal of $" + amount, newBalance);
+
+			accountFound.addTransaction(transaction);
+
+			return accountFound;
+		}
+
+	}
+	
+	private boolean withdrawLimitReached(Account acc, double amount) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startOfDay = sdf.parse(sdf.format(new Date()));
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date endOfDay = sdf2.parse(sdf.format(new Date()) + " 23:59:59");
+
+		double total = 0;
+
+		ArrayList<Transaction> transactionHistory = (ArrayList<Transaction>) acc.getTransactions();
+
+		for (Transaction transaction : transactionHistory) {
+			Date transDate = transaction.getDate();
+			if (transDate.equals(startOfDay) || transDate.equals(endOfDay) || (transDate.before(endOfDay) && transDate.after(startOfDay))) {
+				double amt = transaction.getAmount();
+				if (amt < 0) // negative is withdrawal
+					total += amt;
+			}
+		}
+
+		return Math.abs(total) + amount > 1000;
 	}
 
 	public Account deposit(int accNum, double amount) throws InvalidAccountException, InvalidAmountException {
@@ -63,11 +145,21 @@ public class ServiceBankImpl implements IServiceBank {
 		if (amount <= 0)
 			throw new InvalidAmountException(amount, "withdraw");
 
-		return accountRepo.deposit(accNum, amount);
+		Account account = accountRepo.findOne(accNum);
+		
+		double newBalance = account.getAccBalance() + amount;
+		account.setAccBalance(newBalance);
+
+		Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), new Date(),
+				amount, "Deposit of $" + amount, newBalance);
+
+		account.addTransaction(transaction);
+
+		return account;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List printTransactions(int accNum, String dateFrom, String dateTo)
+
+	public List<Transaction> printTransactions(int accNum, String dateFrom, String dateTo)
 			throws IncorrectDateRangeException, InvalidAccountException {
 		if (accNum <= 0)
 			throw new InvalidAccountException();
@@ -84,7 +176,6 @@ public class ServiceBankImpl implements IServiceBank {
 
 			List<Transaction> searchResult = new ArrayList<>();
 
-			@SuppressWarnings("unchecked")
 			ArrayList<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
 
 			for (Transaction transaction : transHistory) {
@@ -104,15 +195,15 @@ public class ServiceBankImpl implements IServiceBank {
 		return date.equals(fromDate) || date.equals(toDate) || (date.after(fromDate) && date.before(toDate));
 	}
 
-	@SuppressWarnings("rawtypes")
-	public List printTransactions(int accNum) throws InvalidAccountException {
+	
+	public List<Transaction> printTransactions(int accNum) throws InvalidAccountException {
 		if (accNum <= 0)
 			throw new InvalidAccountException();
 
 		Account account = accountRepo.findOne(accNum);
 
-		@SuppressWarnings("unchecked")
-		List<Transaction> transHistory = (ArrayList<Transaction>) account.getTransactions();
+	
+		List<Transaction> transHistory = account.getTransactions();
 		List<Transaction> searchResult = new ArrayList<>();
 
 		int lengthOfHistory = transHistory.size();

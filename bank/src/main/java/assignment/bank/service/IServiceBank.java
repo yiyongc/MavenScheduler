@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import assignment.bank.beans.Account;
+import assignment.bank.beans.Customer;
 import assignment.bank.exceptions.IncorrectDateRangeException;
 import assignment.bank.exceptions.InsufficientBalanceException;
 import assignment.bank.exceptions.InvalidAccountCreationException;
@@ -13,7 +14,7 @@ import assignment.bank.exceptions.WithdrawLimitException;
 
 public interface IServiceBank {
 
-	public String createAccount(Account acc) throws InvalidAccountCreationException;
+	public Account createAccount(Customer cust, double amount) throws InvalidAccountCreationException;
 
 	public Account showBalance(int accNumber) throws InvalidAccountException;
 
