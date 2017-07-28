@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,6 +25,7 @@ public class XMLReader {
 	
 	Document dom;
 	IExceptionHandlerStorage storage;
+	Logger logger = Logger.getLogger("XMLReader");
 	
 	public XMLReader(String file, IExceptionHandlerStorage storage) {
 		this.storage = storage;
@@ -38,7 +41,7 @@ public class XMLReader {
 			if (db != null)
 				dom = db.parse(file);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 	

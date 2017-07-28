@@ -11,6 +11,7 @@ public class ProjectInfo {
 		this.exceptionType = exceptionType;
 	}
 	
+	@Override
 	public String toString() {
 		return "[" + projectName + ", " + moduleName + ", " + exceptionType +"]";
 	}
