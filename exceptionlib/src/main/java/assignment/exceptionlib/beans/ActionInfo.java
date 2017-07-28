@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class Action {
+public class ActionInfo {
 	
 	private String name;
 	private Map<String, String> attributeMap;
 	
-	public Action(String name, Map<String, String> attributeMap) {
+	public ActionInfo(String name, Map<String, String> attributeMap) {
 		this.name = name;
 		this.attributeMap = attributeMap;
 	}
@@ -42,10 +42,10 @@ public class Action {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof Action))
+		if (!(o instanceof ActionInfo))
 			return false;
 		
-		Action other = (Action) o;
+		ActionInfo other = (ActionInfo) o;
 		
 		return attributeMap.equals(other.attributeMap) && name.equals(other.name);
 	}

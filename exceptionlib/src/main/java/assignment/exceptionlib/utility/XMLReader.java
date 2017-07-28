@@ -17,7 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import assignment.exceptionlib.beans.Action;
+import assignment.exceptionlib.beans.ActionInfo;
 import assignment.exceptionlib.beans.ProjectInfo;
 import assignment.exceptionlib.storage.IExceptionHandlerStorage;
 
@@ -25,9 +25,10 @@ public class XMLReader {
 	
 	Document dom;
 	IExceptionHandlerStorage storage;
+	
 	Logger logger = Logger.getLogger("XMLReader");
 	
-	public XMLReader(String file, IExceptionHandlerStorage storage) {
+	public XMLReader(String file, IExceptionHandlerStorage storage) throws IOException {
 		this.storage = storage;
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -40,7 +41,7 @@ public class XMLReader {
 			//parse using builder to get DOM representation of the XML file
 			if (db != null)
 				dom = db.parse(file);
-		} catch (SAXException | IOException | ParserConfigurationException e) {
+		} catch (SAXException | ParserConfigurationException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
@@ -56,9 +57,7 @@ public class XMLReader {
 
 				//get the project element
 				Element project = (Element)projectList.item(i);
-				String projName = project.getAttribute("name");
-
-				System.out.println("Project " + projName +":");
+				
 				processProject(project);
 
 			}
@@ -74,9 +73,7 @@ public class XMLReader {
 			for(int j = 0 ; j < moduleList.getLength(); j++) {
 				//get the module element 
 				Element module = (Element)moduleList.item(j);
-				String modName = module.getAttribute("name");
-				System.out.println("   Module " + modName + ":");
-
+				
 				processModule(module, project.getAttribute("name"));
 			}
 		}
@@ -91,13 +88,12 @@ public class XMLReader {
 				//get the exception element
 				Element exception = (Element) exceptionList.item(k);
 				String type = exception.getAttribute("type");
-				System.out.println("      Exception " + type + ":");
 
 				/* Create pojo with projName, modName, type */
 				ProjectInfo pInfo = new ProjectInfo(projName, module.getAttribute("name"), type);
 				storage.addProjectInfo(pInfo);
 				
-				Set<Action> actions = storage.getActions(pInfo);
+				Set<ActionInfo> actions = storage.getActions(pInfo);
 				
 				processException(exception, actions);
 			}
@@ -106,7 +102,7 @@ public class XMLReader {
 	}
 
 
-	private void processException(Element exception, Set<Action> actions) {
+	private void processException(Element exception, Set<ActionInfo> actions) {
 		//get its action list
 		NodeList actionList = exception.getElementsByTagName("action");
 		if (actionList != null && actionList.getLength() > 0) {
@@ -122,25 +118,23 @@ public class XMLReader {
 	}
 
 
-	private void processAction(Element action, Set<Action> actions) {
+	private void processAction(Element action, Set<ActionInfo> actions) {
 		for (int m = 0; m < action.getChildNodes().getLength(); m ++) {
 			Node child = action.getChildNodes().item(m);
 			if (child.getNodeType() == Node.ELEMENT_NODE) {
 				String actionName = child.getNodeName();
-				Map<String, String> actionsToPerform = new HashMap<>();
+				Map<String, String> attributes = new HashMap<>();
 				
-				System.out.println("         " + child.getNodeName());
 				
 				for (int n = 0; n < child.getAttributes().getLength(); n++) {
 					String attributeName = child.getAttributes().item(n).getNodeName();
 					String attributeValue = child.getAttributes().item(n).getNodeValue();
 					
-					actionsToPerform.put(attributeName, attributeValue);
-					System.out.println("            " + attributeName + " :: " + attributeValue);
+					attributes.put(attributeName, attributeValue);
 				}
 				
 				/* create action object, add to hashset */
-				Action actionToAdd = new Action(actionName, actionsToPerform);
+				ActionInfo actionToAdd = new ActionInfo(actionName, attributes);
 				actions.add(actionToAdd);
 			}			
 		}

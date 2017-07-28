@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import assignment.exceptionlib.beans.Action;
+import assignment.exceptionlib.beans.ActionInfo;
 import assignment.exceptionlib.beans.ProjectInfo;
 
 public class ExceptionHandlerStorage implements IExceptionHandlerStorage {
-	private Map<ProjectInfo, Set<Action>> handlerStorage;
+	private Map<ProjectInfo, Set<ActionInfo>> handlerStorage;
 	
 	
-	public ExceptionHandlerStorage(Map<ProjectInfo, Set<Action>> handlerStorage) {
+	public ExceptionHandlerStorage(Map<ProjectInfo, Set<ActionInfo>> handlerStorage) {
 		this.handlerStorage = handlerStorage;
 	}
 
@@ -20,19 +20,27 @@ public class ExceptionHandlerStorage implements IExceptionHandlerStorage {
 		if (handlerStorage.containsKey(pInfo))
 			return false;
 		else {
-			Set<Action> actions = new HashSet<>();
+			Set<ActionInfo> actions = new HashSet<>();
 			handlerStorage.put(pInfo, actions);
 			return true;
 		}
 	}
 		
-	public Set<Action> getActions(ProjectInfo pInfo) {
+	public Set<ActionInfo> getActions(ProjectInfo pInfo) {
 		if (!handlerStorage.containsKey(pInfo))
 			return Collections.emptySet();
 		else {
 			return handlerStorage.get(pInfo);
 		}
 	
+	}
+
+	public Map<ProjectInfo, Set<ActionInfo>> getHandlerStorage() {
+		return handlerStorage;
+	}
+
+	public void setHandlerStorage(Map<ProjectInfo, Set<ActionInfo>> handlerStorage) {
+		this.handlerStorage = handlerStorage;
 	}
 	
 }
