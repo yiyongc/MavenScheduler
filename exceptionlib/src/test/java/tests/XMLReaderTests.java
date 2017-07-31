@@ -1,5 +1,7 @@
 package tests;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +36,19 @@ public class XMLReaderTests {
 		service.init();
 	}
 
-	
+	@Test
+	public void incorrectXMLFileStructure() {		
+		IExceptionLibService service = new ExceptionLibServiceImpl("D:\\Users\\yichee\\Desktop\\Playground\\Assignment 3\\Testing2.xml");
+		
+		try {
+			service.init();
+		} catch (IOException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
+		}
+		
+		//Parsing fails so no projectinfos and actions
+		assertEquals(0, service.getStorageEntrySize());
+		assertEquals(0, service.getStorageActionSize());
+	}
 
 }

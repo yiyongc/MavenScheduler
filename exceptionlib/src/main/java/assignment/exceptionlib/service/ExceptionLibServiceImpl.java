@@ -59,7 +59,7 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 				sb.append(name + " ");
 			}
 		}
-		
+		System.out.println(sb);
 		return sb.toString();
 	}
 
@@ -72,7 +72,13 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 	
 	
 	public int getStorageActionSize() {
-		return storage.getHandlerStorage().values().size();
+		int count = 0;
+		
+		for(Set<ActionInfo> actionSet : storage.getHandlerStorage().values()) {
+			count += actionSet.size();
+		}
+		
+		return count;
 	}
 	
 	public void printStorageContents() {
