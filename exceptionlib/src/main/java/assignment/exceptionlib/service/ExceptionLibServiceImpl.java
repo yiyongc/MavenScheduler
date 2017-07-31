@@ -64,7 +64,7 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 					sb.append(name + " ");
 				}
 			} catch (InstantiationException | IllegalAccessException e1) {
-				logger.log(Level.FINE, e.getMessage(), e);
+				logger.log(Level.FINE, e1.getMessage(), e1);
 			}
 			
 		}
