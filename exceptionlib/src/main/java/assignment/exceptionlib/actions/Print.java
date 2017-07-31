@@ -5,8 +5,8 @@ import java.util.Map;
 public class Print extends Action {
 
 	@Override
-	public void execute(Map<String, String> attributes) {
-		System.out.println("Printing Message: " + attributes.get("message"));
+	public String execute(Map<String, String> attributes) {
+		return "Printing Message: " + attributes.get("message");
 	}
 
 }

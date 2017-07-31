@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Map.Entry;
 
 import assignment.exceptionlib.actions.Action;
@@ -20,6 +22,7 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 	XMLReader reader;
 	IExceptionHandlerStorage storage;
 	String file;
+	Logger logger = Logger.getLogger("Exception Library Service.");
 	
 	public ExceptionLibServiceImpl(String file) {
 		this.file = file;
@@ -34,7 +37,7 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 		reader.parseDocument();
 	}
 		
-	public String handleException(String project, String module, Exception e) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public String handleException(String project, String module, Exception e) throws ClassNotFoundException {
 		ProjectInfo pInfo = new ProjectInfo(project, module, e.getClass().getSimpleName());
 		
 		Set<ActionInfo> actionSet = storage.getActions(pInfo);
@@ -52,14 +55,20 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 			char firstChar = Character.toUpperCase(className.charAt(0));
 			String name = firstChar + className.substring(1);
 			Class<?> c = Class.forName("assignment.exceptionlib.actions." + name);
-			Object o = c.newInstance();
-			if (o instanceof Action) {
-				Action action = (Action) o;
-				action.execute(actionInfo.getAttributeMap());
-				sb.append(name + " ");
+			Object o;
+			try {
+				o = c.newInstance();
+				if (o instanceof Action) {
+					Action action = (Action) o;
+					action.execute(actionInfo.getAttributeMap());
+					sb.append(name + " ");
+				}
+			} catch (InstantiationException | IllegalAccessException e1) {
+				logger.log(Level.FINE, e.getMessage(), e);
 			}
+			
 		}
-		System.out.println(sb);
+
 		return sb.toString();
 	}
 
@@ -81,7 +90,9 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 		return count;
 	}
 	
-	public void printStorageContents() {
+	public String printStorageContents() {
+		StringBuilder sb = new StringBuilder();
+		
 		Map<ProjectInfo, Set<ActionInfo>> storageMap = storage.getHandlerStorage();
 	
 		Set<Entry<ProjectInfo, Set<ActionInfo>>> storageSet = storageMap.entrySet();
@@ -89,8 +100,10 @@ public class ExceptionLibServiceImpl implements IExceptionLibService {
 		Iterator<Entry<ProjectInfo, Set<ActionInfo>>> it = storageSet.iterator();
 		
 		while (it.hasNext()) {
-			System.out.println(it.next());
+			sb.append(it.next() + "\n");
 		}
+		
+		return sb.toString();
 	}
 
 }

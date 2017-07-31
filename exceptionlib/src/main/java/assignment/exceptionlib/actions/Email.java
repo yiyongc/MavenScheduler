@@ -5,7 +5,7 @@ import java.util.Map;
 public class Email extends Action {
 
 	@Override
-	public void execute(Map<String, String> attributes) {
+	public String execute(Map<String, String> attributes) {
 		StringBuilder sb = new StringBuilder("Sending Email ");
 		
 		String sendTo = attributes.get("to");
@@ -16,7 +16,7 @@ public class Email extends Action {
 		if (message != null)
 			sb.append(" Message contents: " + message);
 			
-		System.out.println(sb);
+		return sb.toString();
 	}
 
 }

@@ -35,25 +35,21 @@ public class HandleExceptionTests {
 	public void testExceptionHandled() {
 		try {
 			assertEquals("Actions executed: Email Log ", service.handleException("bank", "deposit", new InvalidAccountException()));
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+		} catch (ClassNotFoundException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 	
 	@Test (expected = ClassNotFoundException.class)
 	public void actionClassNotCreated() throws ClassNotFoundException {
-		try {
-			service.handleException("bank", "withdraw", new InsufficientAmountException());
-		} catch ( InstantiationException | IllegalAccessException e) {
-			logger.log(Level.FINE, e.getMessage(), e);
-		}
+		service.handleException("bank", "withdraw", new InsufficientAmountException());
 	}
 	
 	@Test
 	public void libraryDoesNotContainException() {
 		try {
 			assertEquals("", service.handleException("bank", "withdraw", new SQLException()));
-		} catch (ClassNotFoundException| InstantiationException | IllegalAccessException e) {
+		} catch (ClassNotFoundException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}

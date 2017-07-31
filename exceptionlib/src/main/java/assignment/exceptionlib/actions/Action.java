@@ -4,5 +4,5 @@ import java.util.Map;
 
 public abstract class Action {
 
-	public abstract void execute(Map<String, String> attributes);
+	public abstract String execute(Map<String, String> attributes);
 }
