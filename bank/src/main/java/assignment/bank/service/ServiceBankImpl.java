@@ -61,27 +61,31 @@ public class ServiceBankImpl implements IServiceBank {
 		Account accFrom = accountRepo.findOne(fromAcc);
 		Account accTo = accountRepo.findOne(toAcc);
 		
-		if (accFrom.getAccBalance() < amount)
-			throw new InsufficientBalanceException(amount, "transfer");
-		else {
-			double newBalanceSource = accFrom.getAccBalance() - amount;
-			double newBalanceDestination = accTo.getAccBalance() + amount;
-			accFrom.setAccBalance(newBalanceSource);
-			accTo.setAccBalance(newBalanceDestination);
+		synchronized(accFrom) {
+			synchronized(accTo) {
+				if (accFrom.getAccBalance() < amount)
+					throw new InsufficientBalanceException(amount, "transfer");
+				else {
+					double newBalanceSource = accFrom.getAccBalance() - amount;
+					double newBalanceDestination = accTo.getAccBalance() + amount;
+					accFrom.setAccBalance(newBalanceSource);
+					accTo.setAccBalance(newBalanceDestination);
 
-			Date currDate = new Date();
+					Date currDate = new Date();
 
-			Transaction transactionSource = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), currDate,
-					-amount, "Transfer of $" + amount + " to " + toAcc, newBalanceSource);
+					Transaction transactionSource = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), currDate,
+							-amount, "Transfer of $" + amount + " to " + toAcc, newBalanceSource);
 
-			accFrom.addTransaction(transactionSource);
+					accFrom.addTransaction(transactionSource);
 
-			Transaction transactionDest = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), currDate,
-					amount, "Received $" + amount + " from " + fromAcc, newBalanceDestination);
+					Transaction transactionDest = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), currDate,
+							amount, "Received $" + amount + " from " + fromAcc, newBalanceDestination);
 
-			accTo.addTransaction(transactionDest);
+					accTo.addTransaction(transactionDest);
 
-			return accFrom;
+					return accFrom;
+				}
+			}
 		}
 
 	}
@@ -97,22 +101,24 @@ public class ServiceBankImpl implements IServiceBank {
 
 		Account accountFound = accountRepo.findOne(accNum);
 		
-		if (withdrawLimitReached(accountFound, amount))
-			throw new WithdrawLimitException(amount);
+		synchronized(accountFound) {
+			if (withdrawLimitReached(accountFound, amount))
+				throw new WithdrawLimitException(amount);
 
-		double newBalance = accountFound.getAccBalance() - amount;
+			if (accountFound.getAccBalance() < amount)
+				throw new InsufficientBalanceException(amount, withdrawStr);
+			else {
+				double newBalance = accountFound.getAccBalance() - amount;
+				accountFound.setAccBalance(newBalance);
 
-		if (newBalance < 0)
-			throw new InsufficientBalanceException(amount, withdrawStr);
-		else {
-			accountFound.setAccBalance(newBalance);
+				Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), new Date(),
+						-amount, "Withdrawal of $" + amount, newBalance);
 
-			Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), new Date(),
-					-amount, "Withdrawal of $" + amount, newBalance);
+				accountFound.addTransaction(transaction);
 
-			accountFound.addTransaction(transaction);
+				return accountFound;
+			}
 
-			return accountFound;
 		}
 
 	}
@@ -124,7 +130,7 @@ public class ServiceBankImpl implements IServiceBank {
 		Date endOfDay = sdf2.parse(sdf.format(new Date()) + " 23:59:59");
 
 		double total = 0;
-
+		
 		ArrayList<Transaction> transactionHistory = (ArrayList<Transaction>) acc.getTransactions();
 
 		for (Transaction transaction : transactionHistory) {
@@ -147,14 +153,16 @@ public class ServiceBankImpl implements IServiceBank {
 
 		Account account = accountRepo.findOne(accNum);
 		
-		double newBalance = account.getAccBalance() + amount;
-		account.setAccBalance(newBalance);
+		synchronized(account) {
+			double newBalance = account.getAccBalance() + amount;
+			account.setAccBalance(newBalance);
 
-		Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), new Date(),
-				amount, "Deposit of $" + amount, newBalance);
+			Transaction transaction = new Transaction(UniqueNumberGenerator.generateUniqueTransNo(), new Date(),
+					amount, "Deposit of $" + amount, newBalance);
 
-		account.addTransaction(transaction);
-
+			account.addTransaction(transaction);
+		}
+		
 		return account;
 	}
 
