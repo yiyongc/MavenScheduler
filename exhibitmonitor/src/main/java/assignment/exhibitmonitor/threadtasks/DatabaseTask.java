@@ -1,10 +1,70 @@
 package assignment.exhibitmonitor.threadtasks;
 
-public class DatabaseTask implements Runnable {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-	@Override
+import assignment.exhibitmonitor.beans.Record;
+import assignment.exhibitmonitor.utility.Database;
+
+public class DatabaseTask implements Runnable {
+	
+	List<Record> recordList;
+	String tableName;
+	Logger logger = Logger.getLogger("database");
+	
+	public DatabaseTask(List<Record> recordList, String table) {
+		this.recordList = recordList;
+		this.tableName = table;
+	}
+
+
 	public void run() {
-		// TODO Auto-generated method stub
+		while(true) {
+			synchronized(recordList) {
+				while(recordList.isEmpty()) {
+					try {
+						recordList.wait();
+					} catch (InterruptedException e) {
+						logger.log(Level.FINE, e.getMessage(), e);
+						Thread.currentThread().interrupt();
+					}
+				}
+				addToDatabase(recordList.get(0));
+				recordList.remove(0);
+			}
+		}
+	}
+
+
+	private void addToDatabase(Record record) {
+		PreparedStatement statement = null;
+		
+		try (Connection con = Database.getConnection()){
+			
+			statement = con.prepareStatement("INSERT INTO " + tableName + "(filename, linenum, date, record) VALUES(?,?,?,?)");
+			statement.setString(1, record.getFileName());
+			statement.setInt(2, record.getRecordNo());
+			statement.setTimestamp(3, new Timestamp(record.getDate().getTime()));
+			statement.setString(4, record.getRecord());
+
+		
+			statement.execute();
+			
+		} catch (SQLException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
+		} finally {
+			try {
+				if(statement != null)
+					statement.close();
+			} catch (SQLException e) {
+				logger.log(Level.FINE, e.getMessage(), e);
+			}
+		}
 		
 	}
 

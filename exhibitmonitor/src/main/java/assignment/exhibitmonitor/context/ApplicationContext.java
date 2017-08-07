@@ -1,19 +1,35 @@
 package assignment.exhibitmonitor.context;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import assignment.exhibitmonitor.beans.CSVInputFile;
 import assignment.exhibitmonitor.beans.CSVOutputFile;
 import assignment.exhibitmonitor.beans.Field;
+import assignment.exhibitmonitor.beans.Record;
 
 public class ApplicationContext {
 	private ApplicationContext() {}
 	
-	public static final Map<String, Date> fileLog = new HashMap<>();
-	public static final Map<CSVInputFile, List<Field>> inputFiles = new HashMap<>();
-	public static final List<CSVOutputFile> outputFiles = new ArrayList<>();
+	private static final Map<String, Date> fileLog = new HashMap<>();
+	public static Map<String, Date> getFileLog() { return fileLog; }
+	
+	private static final Map<CSVInputFile, List<Field>> inputFiles = new HashMap<>();
+	public static Map<CSVInputFile, List<Field>> getInputFiles() { return inputFiles; }
+	
+	private static final Map<CSVOutputFile, List<String>> outputFiles = new HashMap<>();
+	public static Map<CSVOutputFile, List<String>> getOutputFiles() { return outputFiles; }
+	
+	private static final List<Record> validRecords = new Vector<>();
+	public static List<Record> getValidRecords() { return validRecords; }
+	
+	private static final List<Record> invalidRecords = new Vector<>();
+	public static List<Record> getInvalidRecords() { return invalidRecords; }
+	
+	
+	
+	
 }

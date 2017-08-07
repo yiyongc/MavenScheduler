@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-	<inputfile name="a.csv" time="09:00" grace-period="30">
+	<inputfile name="a.csv" time="16:00" grace-period="30">
 		<structure>
-			<field name="firstname" type="text"/>
-			<field name="lastname" type="text"/>
+			<field name="firstname1" type="text"/>
+			<field name="lastname1" type="text"/>
+			<field name="number" type="int"/>
 		</structure>
 	</inputfile>
 	<inputfile name="b.csv" time="10:00" grace-period="30">
