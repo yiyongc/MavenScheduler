@@ -43,11 +43,11 @@ public class DatabaseTask implements Runnable {
 
 
 	private void addToDatabase(Record record) {
-		PreparedStatement statement = null;
 		
-		try (Connection con = Database.getConnection()){
+		
+		try (Connection con = Database.getConnection();
+				PreparedStatement statement = con.prepareStatement("INSERT INTO " + tableName + "(filename, linenum, date, record) VALUES(?,?,?,?)");){
 			
-			statement = con.prepareStatement("INSERT INTO " + tableName + "(filename, linenum, date, record) VALUES(?,?,?,?)");
 			statement.setString(1, record.getFileName());
 			statement.setInt(2, record.getRecordNo());
 			statement.setTimestamp(3, new Timestamp(record.getDate().getTime()));
@@ -57,15 +57,9 @@ public class DatabaseTask implements Runnable {
 			statement.execute();
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			logger.log(Level.FINE, e.getMessage(), e);
-		} finally {
-			try {
-				if(statement != null)
-					statement.close();
-			} catch (SQLException e) {
-				logger.log(Level.FINE, e.getMessage(), e);
-			}
-		}
+		} 
 		
 	}
 

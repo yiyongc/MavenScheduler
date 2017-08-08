@@ -64,11 +64,9 @@ public class ExportTask implements Runnable {
 	private void writeToFile(String dependencyFileName) throws IOException {
 		List<String> linesToWrite = new ArrayList<>();
 		
-		PreparedStatement statement = null;
-		
-		try (Connection con = Database.getConnection()){
+		try (Connection con = Database.getConnection();
+				PreparedStatement statement = con.prepareStatement("SELECT record FROM valid WHERE filename = ?");){
 			
-			statement = con.prepareStatement("SELECT record FROM valid WHERE filename = ?");
 			statement.setString(1, dependencyFileName);
 			
 			ResultSet results = statement.executeQuery();
@@ -80,14 +78,7 @@ public class ExportTask implements Runnable {
 			
 		} catch (SQLException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
-		} finally {
-			try {
-				if(statement != null)
-					statement.close();
-			} catch (SQLException e) {
-				logger.log(Level.FINE, e.getMessage(), e);
-			}
-		}
+		} 
 
 		Files.write(Paths.get(folder + "\\" + fileName), linesToWrite, Charset.forName("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 		
