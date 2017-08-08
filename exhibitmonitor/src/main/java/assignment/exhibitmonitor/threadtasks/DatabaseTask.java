@@ -57,7 +57,6 @@ public class DatabaseTask implements Runnable {
 			statement.execute();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			logger.log(Level.FINE, e.getMessage(), e);
 		} 
 		
