@@ -7,13 +7,15 @@ import java.util.logging.Logger;
 import java.sql.Connection;
 
 public class Database {
-	private Database() {}
-	
+
 	static Logger logger = Logger.getLogger("database class");
 	
 	private static String dbconnectionString = "jdbc:mysql://localhost:3306/exhibitmonitor?autoReconnect=true&useSSL=false";
 	private static String dbuser = "root";
     private static String dbpass = "root";
+    
+    private Database() {}
+    
 	static {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -22,6 +24,7 @@ public class Database {
 		}  
 		
 	}
+	
 	
 	
 	public static Connection getConnection() throws SQLException {

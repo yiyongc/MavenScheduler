@@ -1,6 +1,8 @@
 package assignment.bank.client.test;
 
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import assignment.bank.exceptions.InsufficientBalanceException;
 import assignment.bank.exceptions.InvalidAccountException;
@@ -11,6 +13,7 @@ import assignment.bank.service.IServiceBank;
 public class BankWithdrawRunner implements Runnable {
 
 	IServiceBank service;
+	Logger logger = Logger.getLogger("BankWithdrawRunner");
 	
 	public BankWithdrawRunner(IServiceBank service) {
 		this.service = service;
@@ -20,10 +23,10 @@ public class BankWithdrawRunner implements Runnable {
 	public void run() {
 		try {
 			service.withdraw(1, 300);
-			System.out.println(service.showBalance(1).getAccBalance());
+			
 		} catch (InsufficientBalanceException | InvalidAccountException | InvalidAmountException
 				| WithdrawLimitException | ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.FINE, e.getMessage(), e);
 		}
 	}
 }

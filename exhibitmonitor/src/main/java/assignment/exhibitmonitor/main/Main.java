@@ -20,6 +20,8 @@ public class Main {
 	
 	private static String folderToExportTo = "D:\\Users\\yichee\\Desktop\\Playground\\Assignment 4\\Export";
 	
+	private Main() {}
+	
 	public static void main(String[] args) throws IOException {
 		XMLParser.parseXML();
 		String folderToPoll = "D:\\Users\\yichee\\Desktop\\Playground\\Assignment 4\\Watch";

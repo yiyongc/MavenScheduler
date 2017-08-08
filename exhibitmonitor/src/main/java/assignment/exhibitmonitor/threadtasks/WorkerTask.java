@@ -32,7 +32,7 @@ public class WorkerTask implements Runnable {
 			BufferedReader br = new BufferedReader(fr);) {
 	
 			int lineNo = 1;
-			String currentLine = null;
+			String currentLine;
 
 			while ((currentLine = br.readLine()) != null) {
 				checkStructure(currentLine, lineNo++);
@@ -91,19 +91,19 @@ public class WorkerTask implements Runnable {
 			
 			switch(type) {
 			
-			case("text"):
+			case "text":
 				result = textCheck(value);
 				break;
-			case("date"):
+			case "date":
 				result = dateCheck(value);
 				break;
-			case("datetime"):
+			case "datetime":
 				result = dateTimeCheck(value);
 				break;
-			case("int"):
+			case "int":
 				result = intCheck(value); 
 				break;
-			case("double"):
+			case "double":
 				result = doubleCheck(value);
 				break;
 			default:
@@ -126,6 +126,7 @@ public class WorkerTask implements Runnable {
 			return !sc.hasNext();
 		}
 		catch(Exception e) {
+			logger.log(Level.FINE, e.getMessage(), e);
 			return false;
 		}
 	}
@@ -139,6 +140,7 @@ public class WorkerTask implements Runnable {
 			return !sc.hasNext();
 		}
 		catch(Exception e) {
+			logger.log(Level.FINE, e.getMessage(), e);
 			return false;
 		}
 
@@ -150,6 +152,7 @@ public class WorkerTask implements Runnable {
 			sdf.parse(date);
 			return true;
 		} catch (ParseException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
 			return false;
 		}
 	}
@@ -160,6 +163,7 @@ public class WorkerTask implements Runnable {
 			sdf.parse(dateTime);
 			return true;
 		} catch (ParseException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
 			return false;
 		}
 	}

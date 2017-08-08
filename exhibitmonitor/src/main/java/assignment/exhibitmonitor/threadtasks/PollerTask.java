@@ -28,21 +28,18 @@ public class PollerTask implements Runnable {
 	public void run() {
 		while(true) {
 			for (File f : folder.listFiles()) {
-				try {
 					if (checkPassed(f)) {
 						Path newPath = Paths.get("D:\\Users\\yichee\\Desktop\\Playground\\Assignment 4\\Process\\" + f.getName());
 						Date date = new Date(f.lastModified());
-						Files.move(Paths.get(f.getAbsolutePath()), newPath);
+						performTaskOnFile(f, true, newPath);
 						ApplicationContext.getFileLog().put(f.getName(), date);
 						Thread worker = new Thread(new WorkerTask(newPath.toString()));
 						worker.start();
 					} 
 					else {
-						Files.delete(Paths.get(f.getAbsolutePath()));
+						performTaskOnFile(f, false, null);
 					}
-				} catch (IOException e) {
-					logger.log(Level.FINE, e.getMessage(), e);
-				}
+				
 			}
 			
 			try {
@@ -53,6 +50,18 @@ public class PollerTask implements Runnable {
 			}
 		}
 		
+	}
+	
+	private void performTaskOnFile(File f, boolean result, Path newPath) {
+		try {
+			if (result) {
+				Files.move(Paths.get(f.getAbsolutePath()), newPath);
+			}
+			else 
+				Files.delete(Paths.get(f.getAbsolutePath()));
+		} catch (IOException e) {
+			logger.log(Level.FINE, e.getMessage(), e);
+		}
 	}
 	
 	private boolean checkPassed(File f) {
@@ -67,7 +76,7 @@ public class PollerTask implements Runnable {
 	private boolean isValidFile(String file) {
 		CSVInputFile input = new CSVInputFile(file, new Date(), (byte)30);
 		
-		return (ApplicationContext.getInputFiles().containsKey(input)) ? true : false;
+		return ApplicationContext.getInputFiles().containsKey(input) ? true : false;
 	}
 	
 	private boolean isDuplicate(File f) {

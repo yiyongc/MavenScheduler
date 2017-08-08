@@ -16,15 +16,16 @@ public class DatabaseTask implements Runnable {
 	List<Record> recordList;
 	String tableName;
 	Logger logger = Logger.getLogger("database");
+	boolean scanForChanges = true;
 	
 	public DatabaseTask(List<Record> recordList, String table) {
 		this.recordList = recordList;
 		this.tableName = table;
 	}
 
-
+	@Override
 	public void run() {
-		while(true) {
+		while(scanForChanges) {
 			synchronized(recordList) {
 				while(recordList.isEmpty()) {
 					try {
@@ -54,7 +55,7 @@ public class DatabaseTask implements Runnable {
 
 		
 			statement.execute();
-			
+
 		} catch (SQLException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		} finally {

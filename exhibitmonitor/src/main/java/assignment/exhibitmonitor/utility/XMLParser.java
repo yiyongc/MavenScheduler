@@ -126,21 +126,27 @@ public class XMLParser {
 		if (structure != null && structure.getLength() > 0) {
 			for(int j = 0 ; j < structure.getLength(); j++) {
 				NodeList fieldList = structure.item(j).getChildNodes();
-				for (int l = 0; l < fieldList.getLength(); l++) {
-					if (fieldList.item(l).getNodeType() == Node.ELEMENT_NODE) {
-						Node field = fieldList.item(l);
-						
-						addFieldsToFileStructure(field, fileStructure);
-						
-					}
-				}
+				readFieldList(fieldList, fileStructure);
+				
 			}
 		}
 		
 	}
 
+	private static void readFieldList(NodeList fieldList, List<Field> fileStructure) {
+		for (int l = 0; l < fieldList.getLength(); l++) {
+			if (fieldList.item(l).getNodeType() == Node.ELEMENT_NODE) {
+				Node field = fieldList.item(l);
+				
+				addFieldsToFileStructure(field, fileStructure);
+				
+			}
+		}
+	}
+
 	private static void addFieldsToFileStructure(Node field, List<Field> fileStructure) {
-		Field f = null;
+		Field f;
+		
 		for (int n = 0; n < field.getAttributes().getLength(); n+=2) {
 			String fieldName = field.getAttributes().item(n).getNodeValue();
 			String fieldType = field.getAttributes().item(n+1).getNodeValue();

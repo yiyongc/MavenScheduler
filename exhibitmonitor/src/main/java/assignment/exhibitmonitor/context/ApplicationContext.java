@@ -15,21 +15,14 @@ public class ApplicationContext {
 	private ApplicationContext() {}
 	
 	private static final Map<String, Date> fileLog = new HashMap<>();
-	public static Map<String, Date> getFileLog() { return fileLog; }
-	
 	private static final Map<CSVInputFile, List<Field>> inputFiles = new HashMap<>();
-	public static Map<CSVInputFile, List<Field>> getInputFiles() { return inputFiles; }
-	
 	private static final Map<CSVOutputFile, List<String>> outputFiles = new HashMap<>();
-	public static Map<CSVOutputFile, List<String>> getOutputFiles() { return outputFiles; }
-	
 	private static final List<Record> validRecords = new Vector<>();
-	public static List<Record> getValidRecords() { return validRecords; }
-	
 	private static final List<Record> invalidRecords = new Vector<>();
+	
 	public static List<Record> getInvalidRecords() { return invalidRecords; }
-	
-	
-	
-	
+	public static Map<String, Date> getFileLog() { return fileLog; }
+	public static List<Record> getValidRecords() { return validRecords; }
+	public static Map<CSVOutputFile, List<String>> getOutputFiles() { return outputFiles; }
+	public static Map<CSVInputFile, List<Field>> getInputFiles() { return inputFiles; }
 }
