@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +21,7 @@ import assignment.exhibitmonitor.beans.CSVOutputFile;
 import assignment.exhibitmonitor.context.ApplicationContext;
 import assignment.exhibitmonitor.utility.Database;
 
-public class ExportTask implements Runnable {
+public class ExportTask extends TimerTask {
 
 	static Logger logger = Logger.getLogger("ExportTask");
 	private String fileName;

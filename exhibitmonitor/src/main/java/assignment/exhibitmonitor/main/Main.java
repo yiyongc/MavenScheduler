@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat;
 import assignment.exhibitmonitor.beans.CSVOutputFile;
 import assignment.exhibitmonitor.context.ApplicationContext;
 import assignment.exhibitmonitor.threadtasks.DatabaseTask;
+import assignment.exhibitmonitor.threadtasks.ExportTask;
 import assignment.exhibitmonitor.threadtasks.PollerTask;
-import assignment.exhibitmonitor.utility.OutputTimerTask;
 import assignment.exhibitmonitor.utility.XMLParser;
 
 import java.util.Calendar;
@@ -53,7 +53,7 @@ public class Main {
 			}
 			
 			Timer timer = new Timer();
-			timer.schedule(new OutputTimerTask(key.getName(), folderToExportTo), today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES));
+			timer.schedule(new ExportTask(key.getName(), folderToExportTo), today.getTime(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES));
 		}
 		
 	}
