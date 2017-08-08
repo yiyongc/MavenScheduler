@@ -34,7 +34,6 @@ public class CSVOutputFile {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((time == null) ? 0 : time.hashCode());
 		return result;
 	}
 
@@ -52,12 +51,9 @@ public class CSVOutputFile {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (time == null) {
-			if (other.time != null)
-				return false;
-		} else if (!time.equals(other.time))
-			return false;
 		return true;
 	}
+
+
 
 }

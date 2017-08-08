@@ -57,7 +57,7 @@ public class PollerTask implements Runnable {
 	
 	private boolean checkPassed(File f) {
 		try {
-			return isValidFile(f.getName()) && !isDuplicate(f);/* && isOnTime(f)*/
+			return isValidFile(f.getName()) && !isDuplicate(f) && isOnTime(f);
 		} catch (Exception e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
@@ -91,8 +91,9 @@ public class PollerTask implements Runnable {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		Date dateFormatted = sdf.parse(sdf.format(date));
 
+		
 		for (CSVInputFile key : ApplicationContext.getInputFiles().keySet()) {
-			if (key.getName() == f.getName()) {
+			if (key.getName().equals(f.getName())) {
 				long timeLimit = key.getTime().getTime() + TimeUnit.MINUTES.toMillis(key.getGracePeriod());
 				if (timeLimit < dateFormatted.getTime())
 					return false;

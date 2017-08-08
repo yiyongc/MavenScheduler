@@ -16,6 +16,7 @@ import assignment.exhibitmonitor.beans.CSVInputFile;
 import assignment.exhibitmonitor.beans.Field;
 import assignment.exhibitmonitor.beans.Record;
 import assignment.exhibitmonitor.context.ApplicationContext;
+import assignment.exhibitmonitor.exceptions.FileNotDeletedException;
 
 public class WorkerTask implements Runnable {
 	Logger logger = Logger.getLogger("Worker");
@@ -41,16 +42,10 @@ public class WorkerTask implements Runnable {
 			
 			File f = new File(file);
 	
-			if(f.delete()){
-    			System.out.println(f.getName() + " is deleted!");
-    		}else{
-    			System.out.println("Delete operation is failed.");
-    			System.out.println(f.getAbsolutePath());
-    		}
-			
-			
+			if(!f.delete())
+				throw new FileNotDeletedException();
 
-		} catch (IOException e) {
+		} catch (IOException | FileNotDeletedException e) {
 			logger.log(Level.FINE, e.getMessage(), e);
 		}
 		
@@ -87,34 +82,38 @@ public class WorkerTask implements Runnable {
 	}
 
 	private boolean checkTypes(List<Field> structure, String[] givenValues) {
+		boolean result = false;
+		
 		for (int i = 0; i < structure.size(); i++) {
 
 			String type = structure.get(i).getType();
 			String value = givenValues[i];
-
+			
 			switch(type) {
+			
 			case("text"):
-				if (!textCheck(value))
-					return false;
+				result = textCheck(value);
 				break;
 			case("date"):
-				if (!dateTimeCheck(value))
-					return false;
+				result = dateCheck(value);
+				break;
+			case("datetime"):
+				result = dateTimeCheck(value);
 				break;
 			case("int"):
-				if (!intCheck(value)) 
-					return false;
+				result = intCheck(value); 
 				break;
 			case("double"):
-				if (!doubleCheck(value))
-					return false;
+				result = doubleCheck(value);
 				break;
 			default:
 				return false;
 			}
+			if(!result)
+				return result;
 		}
 		
-		return true;
+		return result;
 	}
 
 	private boolean doubleCheck(String value) {
@@ -144,11 +143,21 @@ public class WorkerTask implements Runnable {
 		}
 
 	}
+	
+	private boolean dateCheck(String date) {
+		SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			sdf.parse(date);
+			return true;
+		} catch (ParseException e) {
+			return false;
+		}
+	}
 
-	private boolean dateTimeCheck(String value) {
+	private boolean dateTimeCheck(String dateTime) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-			sdf.parse(value);
+			sdf.parse(dateTime);
 			return true;
 		} catch (ParseException e) {
 			return false;

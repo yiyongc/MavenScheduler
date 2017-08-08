@@ -13,9 +13,22 @@
 			<field name="lastname" type="text"/>
 		</structure>
 	</inputfile>
+	<inputfile name="c.csv" time="23:00" grace-period="30">
+		<structure>
+			<field name="name" type="text"/>
+			<field name="date" type="date"/>
+			<field name="datetime" type="datetime"/>
+			<field name="mydouble" type="double"/>
+		</structure>
+	</inputfile>
 	
-	<outputfile name="c.csv" time="12:00">
+	<outputfile name="x.csv" time="15:50">
 		<dependency file="a.csv"/>
 		<dependency file="b.csv"/>
+	</outputfile>
+	
+	<outputfile name="y.csv" time="14:27">
+		<dependency file="a.csv"/>
+		<dependency file="c.csv"/>
 	</outputfile>
 </config>
